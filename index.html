@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>啃料十篇</title>
+<meta name="theme-color" content="#0e7c7b" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1514" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="啃料">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}
+.install-tip{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:30;background:#17221f;color:#f4f7f5;border-radius:12px;padding:12px 14px;font-size:13.5px;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.25);display:flex;gap:10px;align-items:center}
+.install-tip button{flex:none;border:0;border-radius:8px;padding:6px 10px;background:#4fc4bb;color:#06211f;font-weight:600}
+</style>
+</head>
+<body>
+<style>
+/* 布局：单栏手机应用，最宽 640。纸面感：听写区是横格纸，计数用等宽数字。 */
+:root{
+  --bg:#f4f7f5; --surface:#ffffff; --fg:#17221f; --muted:#5e6e69; --line:#d5ddd9; --rule:#e4ebe8;
+  --accent:#0e7c7b; --accent-ink:#ffffff; --soft:#e2f1ee; --soft-ink:#0a5b5a;
+  --ok:#2f8f4e; --ok-soft:#e5f3e9; --warn:#a86b12; --warn-soft:#fbefd8; --bad:#b8392a; --bad-soft:#fbe4e0;
+  --lock:#9aa8a3; --shadow:0 1px 2px rgba(23,34,31,.06),0 6px 18px rgba(23,34,31,.06);
+  --serif:Georgia,"Songti SC","Noto Serif SC","SimSun",serif;
+  --sans:system-ui,-apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1514; --surface:#171f1e; --fg:#e6edeb; --muted:#9aa9a4; --line:#2a3533; --rule:#223029;
+  --accent:#4fc4bb; --accent-ink:#06211f; --soft:#163331; --soft-ink:#9fe3dc;
+  --ok:#6cc98a; --ok-soft:#163222; --warn:#e3b05a; --warn-soft:#3a2c12; --bad:#ef8a7c; --bad-soft:#3d1c18;
+  --lock:#5f6d69; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.35); color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f1514; --surface:#171f1e; --fg:#e6edeb; --muted:#9aa9a4; --line:#2a3533; --rule:#223029;
+  --accent:#4fc4bb; --accent-ink:#06211f; --soft:#163331; --soft-ink:#9fe3dc;
+  --ok:#6cc98a; --ok-soft:#163222; --warn:#e3b05a; --warn-soft:#3a2c12; --bad:#ef8a7c; --bad-soft:#3d1c18;
+  --lock:#5f6d69; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.35); color-scheme:dark }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--serif);text-wrap:balance;margin:0;font-weight:700}
+.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--line)}
+.topbar .wrap{padding-block:10px;display:flex;align-items:center;gap:10px;min-height:52px}
+.topbar h1{font-size:19px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1}
+.topbar .sub{font-size:12px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums;text-align:right;flex:none;white-space:nowrap}
+.iconbtn{border:0;background:transparent;padding:6px 8px;border-radius:8px;font-size:18px;line-height:1;color:var(--fg)}
+.iconbtn:hover{background:var(--soft)}
+.stack{display:grid;gap:14px;margin-top:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow);min-width:0}
+.card h2{font-size:17px;margin-bottom:6px}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:var(--mono)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;font-weight:600;font-size:14px;color:var(--fg)}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn.block{width:100%}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:600;background:var(--soft);color:var(--soft-ink)}
+.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)} .chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.lock{background:transparent;border:1px dashed var(--lock);color:var(--lock)}
+.note{border-left:3px solid var(--accent);background:var(--soft);color:var(--soft-ink);padding:10px 12px;border-radius:0 10px 10px 0;font-size:13.5px}
+.note.warn{border-color:var(--warn);background:var(--warn-soft);color:var(--warn)}
+.note.bad{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+.note.ok{border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+label.f{display:grid;gap:6px;font-size:13px;color:var(--muted)}
+label.f > span b{color:var(--fg)}
+input[type=text],select,textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg);color:var(--fg)}
+textarea{min-height:120px;resize:vertical;line-height:1.6}
+textarea.paper{font-family:var(--serif);font-size:16px;line-height:28px;min-height:260px;background:
+  repeating-linear-gradient(to bottom,transparent 0,transparent 27px,var(--rule) 27px,var(--rule) 28px);background-attachment:local;background-color:var(--surface);padding:0 12px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.big{font-family:var(--mono);font-size:44px;line-height:1;font-weight:500;letter-spacing:-.02em}
+.shelf{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.slot{aspect-ratio:1/1.15;border-radius:10px;border:1px solid var(--line);background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px;text-align:center;min-width:0}
+.slot .n{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.slot .t{font-size:11px;line-height:1.2;color:var(--fg);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.slot.done{background:var(--ok-soft);border-color:var(--ok)} .slot.done .n{color:var(--ok)}
+.slot.cur{background:var(--soft);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)} .slot.cur .n{color:var(--accent)}
+.slot.empty{opacity:.75}
+.days{display:grid;grid-template-columns:repeat(14,1fr);gap:5px}
+.day{aspect-ratio:1;border-radius:4px;background:var(--rule);border:1px solid transparent}
+.day.on{background:var(--accent)} .day.today{border-color:var(--fg)}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.step{border:1px solid var(--line);border-radius:10px;padding:8px 6px;text-align:center;background:var(--surface);display:grid;gap:2px;min-width:0}
+.step .k{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.step .nm{font-size:12.5px;font-weight:600;line-height:1.2}
+.step.cur{border-color:var(--accent);background:var(--soft);color:var(--soft-ink)} .step.cur .k{color:var(--soft-ink)}
+.step.done{border-color:var(--ok);color:var(--ok)} .step.done .k{color:var(--ok)}
+.step.lock{color:var(--lock);border-style:dashed} .step.lock .k{color:var(--lock)}
+.subtabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:12px}
+.subtabs button{border:0;background:transparent;padding:8px 10px;font-size:14px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.subtabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+.subtabs button:disabled{color:var(--lock);cursor:not-allowed}
+.player{display:grid;gap:8px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+.player .time{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+.player input[type=range]{width:100%;accent-color:var(--accent)}
+.player .ctl{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.player .ctl .btn{padding:8px 10px}
+.player select.btn{width:auto;background:var(--surface)}
+.player .play{width:46px;height:46px;border-radius:50%;background:var(--accent);color:var(--accent-ink);border:0;font-size:18px;display:grid;place-items:center}
+.player .seg{margin-left:auto;display:flex;gap:6px}
+.btn.on{background:var(--soft);border-color:var(--accent);color:var(--soft-ink)}
+.sent{border-top:1px solid var(--rule);padding:10px 0;display:grid;gap:8px}
+.sent:first-child{border-top:0}
+.sent .en{font-family:var(--serif);font-size:16px;line-height:1.65}
+.sent .en .w{border-radius:3px;padding:0 1px}
+.sent .en .w:hover{background:var(--soft)}
+.sent .en .w.v{background:var(--warn-soft);color:var(--warn);text-decoration:underline dotted}
+.sent.ok .en{color:var(--muted)}
+.sent textarea{min-height:40px;font-size:13.5px;padding:7px 10px}
+.para-h{font-size:12px;color:var(--muted);margin-top:8px;font-family:var(--mono)}
+.vocab{display:grid;gap:6px}
+.vocab .vi{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;border-top:1px solid var(--rule);padding-top:6px}
+.vocab .vi:first-child{border-top:0;padding-top:0}
+.vocab .vi b{font-family:var(--serif)}
+.vocab input{padding:6px 9px;font-size:13px}
+.diff{font-family:var(--serif);font-size:15.5px;line-height:1.7;word-break:break-word}
+.diff .ok{color:var(--muted)} .diff .miss{background:var(--bad-soft);color:var(--bad);border-radius:3px;padding:0 2px;text-decoration:underline} .diff .extra{background:var(--warn-soft);color:var(--warn);text-decoration:line-through;border-radius:3px;padding:0 2px}
+.recite-p{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:8px;background:var(--surface)}
+.recite-p .txt{font-family:var(--serif);font-size:16px;line-height:1.7;min-height:1.5em;word-break:break-word}
+.recite-p.ok{border-color:var(--ok)}
+.hint{font-size:12.5px;color:var(--muted)}
+.attempt{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;border-top:1px solid var(--rule);padding:8px 0}
+.attempt:first-child{border-top:0}
+.method ol{padding-left:20px;margin:6px 0;display:grid;gap:6px}
+.method li b{font-family:var(--serif)}
+details summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:14px}
+details.ted{border:1px dashed var(--accent);border-radius:10px;padding:10px 12px;background:var(--soft)}
+details.ted summary{color:var(--soft-ink)}
+details.ted input{background:var(--surface)}
+details.ted .chip{background:var(--surface);color:var(--soft-ink);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tedlist{display:grid;gap:6px;max-height:340px;overflow-y:auto;padding-right:2px}
+.tedi{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 11px;display:grid;gap:3px;min-width:0;color:var(--fg)}
+.tedi b{font-family:var(--serif);font-size:14px;line-height:1.35;min-width:0}
+.tedi.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:13.5px;box-shadow:var(--shadow);z-index:20;max-width:min(92vw,520px);text-align:center;opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+.word-pop{position:fixed;inset:auto 0 0 0;z-index:15;background:var(--surface);border-top:1px solid var(--line);border-radius:14px 14px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.18);padding:14px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:grid;gap:10px}
+.word-pop b{font-family:var(--serif);font-size:20px}
+a{color:var(--accent)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13.5px}
+.drill-q{font-family:var(--serif);font-size:18px;line-height:1.7;margin-top:10px;word-break:break-word}
+.drill-q .blank{background:var(--warn-soft);color:var(--warn);border-radius:4px;padding:0 4px;letter-spacing:.08em}
+.errlist{display:grid;gap:4px;margin-top:8px}
+.erow{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;border-top:1px solid var(--rule);padding-top:4px;min-width:0}
+.erow b{font-family:var(--serif);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.erow.ok b{color:var(--ok)}
+.kv dt{color:var(--muted)} .kv dd{margin:0}
+.inline-confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13.5px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:380px){.shelf{grid-template-columns:repeat(5,1fr)} .steps .nm{font-size:11.5px}}
+</style>
+
+<header class="topbar"><div class="wrap">
+  <button class="iconbtn" id="backBtn" hidden aria-label="返回">‹</button>
+  <h1 id="title">啃料十篇</h1>
+  <div class="sub" id="subTitle">尚雯婕听写背诵法</div>
+</div></header>
+
+<main class="wrap">
+  <section id="homeView" class="stack"></section>
+  <section id="matView" class="stack" hidden></section>
+  <section id="drillView" class="stack" hidden></section>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="word-pop" id="wordPop" hidden></div>
+<audio id="player" preload="metadata"></audio>
+
+<script>
+/* ============ 工具 ============ */
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todayKey = (d=new Date()) => { const z=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`; };
+const fmtTime = s => { s=Math.max(0,Math.round(s||0)); const m=Math.floor(s/60), r=s%60; return `${m}:${String(r).padStart(2,'0')}`; };
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const daysBetween=(a,b)=>Math.floor((b-a)/86400000);
+let toastT; function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2600); }
+function tokenize(text){
+  return String(text||'').toLowerCase().replace(/[‘’ʼ]/g,"'").replace(/[“”]/g,'"')
+    .replace(/[^a-z0-9'À-ɏ\s-]/g,' ').split(/\s+/).map(w=>w.replace(/^['-]+|['-]+$/g,'')).filter(Boolean);
+}
+function wordCount(t){ return tokenize(t).length; }
+/* 最长公共子序列对齐：返回 {matched, align:[{type:'ok'|'miss'|'extra', a?, b?}]} ；a=原文词，b=听写词 */
+function alignWords(a,b){
+  const n=a.length,m=b.length;
+  if(n*m>16_000_000){ // 太长就退化为词袋
+    const bag=new Map(); for(const w of b) bag.set(w,(bag.get(w)||0)+1);
+    let matched=0; const align=a.map(w=>{ if(bag.get(w)>0){bag.set(w,bag.get(w)-1);matched++;return {type:'ok',a:w};} return {type:'miss',a:w}; });
+    return {matched,align};
+  }
+  const W=m+1; const dp=new Uint16Array((n+1)*(m+1));
+  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--){ dp[i*W+j]= a[i]===b[j] ? dp[(i+1)*W+j+1]+1 : Math.max(dp[(i+1)*W+j],dp[i*W+j+1]); }
+  const align=[]; let i=0,j=0;
+  while(i<n&&j<m){ if(a[i]===b[j]){align.push({type:'ok',a:a[i],b:b[j]});i++;j++;} else if(dp[(i+1)*W+j]>=dp[i*W+j+1]){align.push({type:'miss',a:a[i]});i++;} else {align.push({type:'extra',b:b[j]});j++;} }
+  while(i<n){align.push({type:'miss',a:a[i++]});} while(j<m){align.push({type:'extra',b:b[j++]});}
+  return {matched:dp[0],align};
+}
+function splitParagraphs(text){ return String(text||'').replace(/\r/g,'').split(/\n\s*\n|\n/).map(s=>s.trim()).filter(Boolean); }
+function splitSentences(p){
+  const parts=p.split(/(?<=[.!?…]["'”’)\]]?)\s+(?=["'“‘(\[]?[A-Z0-9])/).map(s=>s.trim()).filter(Boolean);
+  return parts.length?parts:[p];
+}
+/* 把原文拆成 意群(段) → 句 */
+function buildStructure(transcript){
+  let paras=splitParagraphs(transcript);
+  const sents=[]; const groups=[];
+  paras.forEach(p=>{ const ss=splitSentences(p); groups.push(ss.length); ss.forEach(s=>sents.push(s)); });
+  // 没分段的长文：每 4 句算一个意群
+  let paraOf=[]; if(paras.length<=1 && sents.length>6){ paraOf=sents.map((_,i)=>Math.floor(i/4)); }
+  else { let k=0; groups.forEach((g,pi)=>{ for(let x=0;x<g;x++) paraOf[k++]=pi; }); }
+  return {sents, paraOf, paraCount: paraOf.length? Math.max(...paraOf)+1 : 0};
+}
+/* 听写漏掉的词自动进生词本时，剔除这些虚词 */
+const STOP=new Set('the and for are but not you all any can had her was one our out day get has him his how man new now old see two way who boy did its let put say she too use that with have this will your from they know want been good much some time very when come here just like long make many more only over such take than them well were what about after again also back because before being between both could does each even every first found give going great here into just last little most never next other people same should still their there these they thing think those though three through under upon used using where which while whole with without would year your'.split(/\s+/));
+/* TED 精选库：17–21 分钟档，按话题挑。时长是约数，以 TED 页面为准 */
+const TED_LIB=[
+ {t:'AI',s:'fei_fei_li_how_we_re_teaching_computers_to_understand_pictures',n:'How we\'re teaching computers to understand pictures',p:'Fei-Fei Li',m:18,d:'李飞飞讲 ImageNet：怎么教机器"看懂"图片，AI 入门必听'},
+ {t:'AI',s:'jeremy_howard_the_wonderful_and_terrifying_implications_of_computers_that_can_learn',n:'The wonderful and terrifying implications of computers that can learn',p:'Jeremy Howard',m:20,d:'深度学习能做什么、会冲击什么，讲得很平实'},
+ {t:'心理',s:'dan_gilbert_the_surprising_science_of_happiness',n:'The surprising science of happiness',p:'Dan Gilbert',m:21,d:'人为什么会"合成"幸福感，语速快、信息密'},
+ {t:'心理',s:'daniel_kahneman_the_riddle_of_experience_vs_memory',n:'The riddle of experience vs. memory',p:'Daniel Kahneman',m:20,d:'诺奖得主讲体验自我和记忆自我，句子长、逻辑严'},
+ {t:'心理',s:'brene_brown_the_power_of_vulnerability',n:'The power of vulnerability',p:'Brené Brown',m:20,d:'TED 史上最多人看的演讲之一，讲脆弱与联结，口语自然'},
+ {t:'心理',s:'susan_cain_the_power_of_introverts',n:'The power of introverts',p:'Susan Cain',m:19,d:'内向者的力量，语速适中，用词干净'},
+ {t:'心理',s:'amy_cuddy_your_body_language_may_shape_who_you_are',n:'Your body language may shape who you are',p:'Amy Cuddy',m:21,d:'肢体语言与自信，社科演讲的标准结构'},
+ {t:'心理',s:'guy_winch_why_we_all_need_to_practice_emotional_first_aid',n:'Why we all need to practice emotional first aid',p:'Guy Winch',m:17,d:'情绪急救，讲得慢而清楚，适合第一篇'},
+ {t:'商业',s:'simon_sinek_how_great_leaders_inspire_action',n:'How great leaders inspire action',p:'Simon Sinek',m:18,d:'黄金圈 Why-How-What，重复多、结构清晰，好背'},
+ {t:'商业',s:'dan_pink_the_puzzle_of_motivation',n:'The puzzle of motivation',p:'Dan Pink',m:19,d:'奖金为什么不管用，商业心理学经典'},
+ {t:'商业',s:'barry_schwartz_the_paradox_of_choice',n:'The paradox of choice',p:'Barry Schwartz',m:20,d:'选择越多越不满意，讲消费决策'},
+ {t:'商业',s:'dan_ariely_are_we_in_control_of_our_own_decisions',n:'Are we in control of our own decisions?',p:'Dan Ariely',m:17,d:'行为经济学，默认选项如何左右人'},
+ {t:'商业',s:'malcolm_gladwell_choice_happiness_and_spaghetti_sauce',n:'Choice, happiness and spaghetti sauce',p:'Malcolm Gladwell',m:18,d:'从意面酱讲消费者分群，讲故事高手'},
+ {t:'教育',s:'sir_ken_robinson_do_schools_kill_creativity',n:'Do schools kill creativity?',p:'Sir Ken Robinson',m:19,d:'TED 观看量第一，英式幽默，笑点多'},
+ {t:'教育',s:'sal_khan_let_s_use_video_to_reinvent_education',n:'Let\'s use video to reinvent education',p:'Sal Khan',m:20,d:'可汗学院创始人讲翻转课堂，和你做的事最近'},
+ {t:'人文',s:'chimamanda_ngozi_adichie_the_danger_of_a_single_story',n:'The danger of a single story',p:'Chimamanda Ngozi Adichie',m:19,d:'单一故事的危险，叙事型，语言优美'},
+ {t:'人文',s:'david_christian_the_history_of_our_world_in_18_minutes',n:'The history of our world in 18 minutes',p:'David Christian',m:18,d:'18 分钟讲完宇宙史，科普词汇多'},
+ {t:'人文',s:'yuval_noah_harari_what_explains_the_rise_of_humans',n:'What explains the rise of humans?',p:'Yuval Noah Harari',m:17,d:'《人类简史》作者，非母语者，吐字清楚'},
+ {t:'人文',s:'michael_sandel_the_lost_art_of_democratic_debate',n:'The lost art of democratic debate',p:'Michael Sandel',m:20,d:'哈佛公正课的现场感，有观众互动'},
+ {t:'科学',s:'matt_walker_sleep_is_your_superpower',n:'Sleep is your superpower',p:'Matt Walker',m:19,d:'睡眠科学，英音，开头就很抓人'},
+ {t:'科学',s:'jill_bolte_taylor_my_stroke_of_insight',n:'My stroke of insight',p:'Jill Bolte Taylor',m:18,d:'脑科学家亲历中风，情绪饱满'},
+ {t:'科学',s:'hans_rosling_the_best_stats_you_ve_ever_seen',n:'The best stats you\'ve ever seen',p:'Hans Rosling',m:20,d:'数据可视化之父，做财务的会喜欢'},
+ {t:'表达',s:'nancy_duarte_the_secret_structure_of_great_talks',n:'The secret structure of great talks',p:'Nancy Duarte',m:18,d:'好演讲的结构，学完能用在汇报里'},
+ {t:'表达',s:'elizabeth_gilbert_your_elusive_creative_genius',n:'Your elusive creative genius',p:'Elizabeth Gilbert',m:19,d:'《美食祈祷恋爱》作者讲创作焦虑，作家的英文'},
+];
+const TED_TOPICS=[...new Set(TED_LIB.map(x=>x.t))];
+/* TED：从链接取 slug；清洗逐字稿里的时间戳、舞台提示、说话人名 */
+function tedSlug(url){ const m=String(url||'').match(/ted\.com\/talks\/([a-z0-9_]+)/i); return m?m[1]:''; }
+function tedTitle(slug){ const parts=slug.split('_').filter(Boolean); if(parts.length>4) parts.splice(0,2); return parts.map(w=>w[0].toUpperCase()+w.slice(1)).join(' '); }
+function cleanTranscript(text){
+  let t=String(text||'').replace(/\r/g,''); const before=t;
+  t=t.replace(/^\s*\d{1,2}:\d{2}(?::\d{2})?\s*$/gm,'');                 // 单独成行的时间戳
+  t=t.replace(/^\s*\d{1,2}:\d{2}(?::\d{2})?\s+/gm,'');                  // 行首时间戳
+  t=t.replace(/\[\d{1,2}:\d{2}(?::\d{2})?\]/g,'');
+  t=t.replace(/\((?:Laughter|Laughs|Applause|Cheers|Cheering|Music|Singing|Video|Audio|Sighs|Gasps|Whistles|Recording|Beat|Pause|Silence|Mock sobs?|Inaudible|Crosstalk|Chuckles|Coughs)[^)]*\)/gi,'');
+  t=t.replace(/\[(?:Laughter|Applause|Music|inaudible|crosstalk)[^\]]*\]/gi,'');
+  t=t.replace(/^(?:[A-Z][A-Za-z.'\-]+(?: [A-Z][A-Za-z.'\-]+){0,3}|[A-Z]{1,3}):\s+/gm,''); // 段首人名：
+  t=t.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').trim();
+  return {text:t, removed: wordCount(before)-wordCount(t)};
+}
+function firstLetters(s){ return s.replace(/[A-Za-zÀ-ɏ']+/g, w=>w[0]+'_'.repeat(Math.max(1,Math.min(w.length-1,6)))); }
+
+/* ============ 存储：云端 db（按人私有）+ 本地镜像；音频存设备 IndexedDB ============ */
+const Store = {
+  db:null, uid:null, ready:false, pending:new Map(), timers:new Map(),
+  lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch{ return null; } },
+  lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch{} },
+  lsDel(k){ try{ localStorage.removeItem(k); }catch{} },
+  async init(){
+    try{
+      if(!window.claude?.use) return;
+      const [db,user]=await Promise.all([claude.use('db'),claude.use('user')]);
+      if(db&&user){ const id=await user.id(); if(id){ this.db=db; this.uid=id; } }
+    }catch(e){ console.warn('db unavailable',e); }
+  },
+  base(){ return `data/users/${this.uid}`; },
+  async pullAll(){ // 返回 {profile, materials} 或 null
+    if(!this.db) return null;
+    try{
+      const [p,q,e]=await Promise.all([ this.db.doc(`${this.base()}/profile`).get(), this.db.collection(`${this.base()}/materials/items`).get(), this.db.doc(`${this.base()}/errors`).get() ]);
+      const materials={}; q.docs.forEach(d=>{ const x=d.data(); if(x) materials[d.id]=x; });
+      return {profile: p.exists? p.data(): null, materials, errors: e.exists? e.data(): null};
+    }catch(e){ console.warn('pull failed',e); return null; }
+  },
+  saveMaterial(m, immediate=false){
+    m.updatedAt=Date.now(); this.lsSet('kl:m:'+m.id, m); markToday();
+    if(!this.db) return;
+    const run=()=>{ this.timers.delete(m.id); this.db.doc(`${this.base()}/materials/items/${m.id}`).set(JSON.parse(JSON.stringify(m))).catch(e=>console.warn('save failed',e)); };
+    clearTimeout(this.timers.get(m.id)); if(immediate) run(); else this.timers.set(m.id, setTimeout(run, 1200));
+  },
+  saveProfile(p){ p.updatedAt=Date.now(); this.lsSet('kl:profile', p); if(this.db) this.db.doc(`${this.base()}/profile`).set(JSON.parse(JSON.stringify(p))).catch(e=>console.warn(e)); },
+  saveErrors(e){ e.updatedAt=Date.now(); this.lsSet('kl:errors', e); markToday(); if(!this.db) return; clearTimeout(this.timers.get('errors')); this.timers.set('errors', setTimeout(()=>{ this.db.doc(`${this.base()}/errors`).set(JSON.parse(JSON.stringify(e))).catch(err=>console.warn(err)); },800)); },
+  async deleteMaterial(id){ this.lsDel('kl:m:'+id); if(this.db){ try{ await this.db.doc(`${this.base()}/materials/items/${id}`).delete(); }catch(e){console.warn(e);} } },
+  localAll(){ const materials={}; try{ for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k&&k.startsWith('kl:m:')){ const v=this.lsGet(k); if(v&&v.id) materials[v.id]=v; } } }catch{} return {profile:this.lsGet('kl:profile'), materials}; }
+};
+const AudioStore = {
+  open(){ return new Promise((res,rej)=>{ const r=indexedDB.open('kenliao',1); r.onupgradeneeded=()=>r.result.createObjectStore('audio'); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); },
+  async put(id,blob){ const d=await this.open(); return new Promise((res,rej)=>{ const t=d.transaction('audio','readwrite'); t.objectStore('audio').put(blob,id); t.oncomplete=res; t.onerror=()=>rej(t.error); }); },
+  async get(id){ try{ const d=await this.open(); return await new Promise((res,rej)=>{ const r=d.transaction('audio').objectStore('audio').get(id); r.onsuccess=()=>res(r.result||null); r.onerror=()=>rej(r.error); }); }catch{ return null; } },
+  async del(id){ try{ const d=await this.open(); d.transaction('audio','readwrite').objectStore('audio').delete(id); }catch{} }
+};
+
+/* ============ 状态 ============ */
+const STEPS=['选材','听写','吃透·背诵','原速'];
+const TYPES={news:'新闻报道',talk:'访谈 / 对话节目',speech:'演讲 / TED',doc:'纪录片 / 科普',book:'书籍朗读 / 有声书',radio:'电台广播'};
+const S = { profile:{dayLog:{}, order:[]}, materials:{}, errors:{items:{}}, drill:null, view:'home', curId:null, sub:{}, ui: Store.lsGet('kl:ui')||{} };
+
+/* ============ 错题本：核对时漏掉/写错的词自动登记并计次；填空反复练，连对三次过关 ============ */
+const GRADUATE=3;
+function sentenceFor(m, word){ const st=buildStructure(m.transcript); const i=st.sents.findIndex(s=>tokenize(s).includes(word)); return i>=0?{i,text:st.sents[i]}:null; }
+function logErrorWord(m, word){
+  const E=S.errors.items; const k='w:'+word; const it=E[k]||(E[k]={type:'word',word,count:0,right:0,streak:0,lastWrong:0,lastAt:0,ctx:[]});
+  it.count++; it.streak=0; it.lastWrong=Date.now(); it.lastAt=it.lastWrong;
+  const c=sentenceFor(m,word); if(c&&!it.ctx.some(x=>x.mid===m.id&&x.i===c.i)){ it.ctx.push({mid:m.id,i:c.i,text:c.text}); if(it.ctx.length>5) it.ctx=it.ctx.slice(-5); }
+}
+function logErrorSentence(m, i, text){
+  const E=S.errors.items; const k='s:'+m.id+':'+i; const it=E[k]||(E[k]={type:'sent',mid:m.id,i,text,count:0,right:0,streak:0,lastWrong:0,lastAt:0});
+  it.count++; it.streak=0; it.lastWrong=Date.now(); it.lastAt=it.lastWrong; return it;
+}
+function errorItems(){ return Object.entries(S.errors.items).map(([k,v])=>Object.assign({key:k},v)); }
+function pendingErrors(){ return errorItems().filter(x=>x.streak<GRADUATE).sort((a,b)=>(a.streak-b.streak)||(b.count-a.count)||(a.lastAt-b.lastAt)); }
+function startDrill(){ const q=pendingErrors().slice(0,10).map(x=>x.key); if(!q.length) return toast('错题本是空的，先去听写'); S.drill={queue:q, idx:0, revealed:false, right:0, wrong:0, answer:''}; S.view='drill'; P.el.pause(); render(); window.scrollTo(0,0); }
+function clozeHTML(text, word){ return text.split(/(\s+)/).map(w=>{ if(/^\s+$/.test(w)) return w; const k=tokenize(w)[0]; if(k===word){ return `<span class="blank">${esc(w.replace(/[A-Za-zÀ-ɏ']+/, s=>s[0]+'_'.repeat(Math.max(2,s.length-1))))}</span>`; } return esc(w); }).join(''); }
+function renderDrill(){
+  const d=S.drill; if(!d){ S.view='home'; return render(); }
+  $('#title').textContent='错题本 · 练一组'; $('#subTitle').textContent=`${Math.min(d.idx+1,d.queue.length)} / ${d.queue.length}`;
+  if(d.idx>=d.queue.length){
+    const left=pendingErrors().length;
+    $('#drillView').innerHTML=`<div class="card"><div class="eyebrow">这组练完</div><h2>对 ${d.right} · 错 ${d.wrong}</h2><p class="small muted" style="margin:6px 0 12px">${left?`还有 ${left} 条没过关。连对三次才算过，错一次从头计。`:'错题本清空了，漂亮。'}</p><div class="row">${left?'<button class="btn primary" id="drillAgain">再来一组</button>':''}<button class="btn" id="drillHome">回首页</button></div></div>`;
+    $('#drillHome').onclick=()=>{ S.drill=null; S.view='home'; render(); }; const ag=$('#drillAgain'); if(ag) ag.onclick=startDrill; return;
+  }
+  const it=S.errors.items[d.queue[d.idx]]; if(!it){ d.idx++; return render(); }
+  const mTitle = it.type==='word' ? (it.ctx[0]&&S.materials[it.ctx[0].mid]?S.materials[it.ctx[0].mid].title:'') : (S.materials[it.mid]?S.materials[it.mid].title:'');
+  let body='';
+  if(it.type==='word'){
+    const ctx=it.ctx.length? it.ctx[(it.count+d.idx)%it.ctx.length] : null;
+    body=`<div class="eyebrow">填空 · 错过 ${it.count} 次 · 连对 ${it.streak}/${GRADUATE}</div>
+      <div class="drill-q">${ctx?clozeHTML(ctx.text,it.word):`<span class="blank">${esc(it.word[0]+'_'.repeat(it.word.length-1))}</span>`}</div>
+      ${mTitle?`<div class="hint">出自《${esc(mTitle)}》</div>`:''}
+      ${d.revealed?`<div class="note ${d.lastRight?'ok':'bad'}" style="margin-top:10px">${d.lastRight?'对了':'写错了'}：正确是 <b class="num" style="font-family:var(--serif);font-size:17px">${esc(it.word)}</b>${d.answer&&!d.lastRight?`，你写的是「${esc(d.answer)}」`:''}</div>`:''}
+      <div class="row" style="margin-top:12px"><input type="text" id="drillIn" class="grow" placeholder="把这个词写出来" autocapitalize="off" autocorrect="off" spellcheck="false" ${d.revealed?'disabled':''} value="${d.revealed?esc(d.answer):''}">${d.revealed?`<button class="btn primary" id="drillNext">下一题</button>`:`<button class="btn primary" id="drillCheck">检查</button>`}</div>`;
+  } else {
+    body=`<div class="eyebrow">整句默写 · 记了 ${it.count} 次 · 连对 ${it.streak}/${GRADUATE}</div>
+      <div class="drill-q muted">${esc(firstLetters(it.text))}</div>
+      ${mTitle?`<div class="hint">出自《${esc(mTitle)}》，只给首字母，把整句写出来</div>`:''}
+      ${d.revealed?`<div class="diff card" style="box-shadow:none;margin-top:10px">${d.diffHtml}</div><div class="note ${d.lastRight?'ok':'bad'}" style="margin-top:8px">${d.lastRight?'对了，九成以上':'还不到九成，看看红的地方'}</div>`:''}
+      <textarea id="drillIn" class="paper" style="min-height:120px;margin-top:12px" placeholder="写整句" spellcheck="false" ${d.revealed?'disabled':''}>${d.revealed?esc(d.answer):''}</textarea>
+      <div class="row" style="margin-top:10px">${d.revealed?`<button class="btn primary grow" id="drillNext">下一题</button>`:`<button class="btn primary grow" id="drillCheck">检查</button>`}</div>`;
+  }
+  $('#drillView').innerHTML=`<div class="card">${body}</div><div class="row" style="justify-content:space-between"><button class="btn sm ghost" id="drillSkip" ${d.revealed?'disabled':''}>跳过这题</button><button class="btn sm ghost danger" id="drillDrop">这条不用再练</button></div>`;
+  const inp=$('#drillIn'); if(!d.revealed) inp.focus();
+  const check=()=>{ const ans=inp.value.trim(); if(!ans) return toast('先写点什么'); let right=false;
+    if(it.type==='word'){ right = tokenize(ans)[0]===it.word; }
+    else { const r=alignWords(tokenize(it.text),tokenize(ans)); right = r.matched/Math.max(1,tokenize(it.text).length)>=0.9; d.diffHtml=r.align.map(x=>x.type==='ok'?`<span class="ok">${esc(x.a)}</span>`:x.type==='miss'?`<span class="miss">${esc(x.a)}</span>`:`<span class="extra">${esc(x.b)}</span>`).join(' '); }
+    if(right){ it.streak++; it.right++; d.right++; } else { it.streak=0; it.count++; it.lastWrong=Date.now(); d.wrong++; }
+    it.lastAt=Date.now(); d.revealed=true; d.lastRight=right; d.answer=ans; Store.saveErrors(S.errors); render(); };
+  const ck=$('#drillCheck'); if(ck){ ck.onclick=check; inp.addEventListener('keydown',e=>{ if(e.key==='Enter'&&it.type==='word'){ e.preventDefault(); check(); } }); }
+  const nx=$('#drillNext'); if(nx) nx.onclick=()=>{ d.idx++; d.revealed=false; d.answer=''; render(); };
+  $('#drillSkip').onclick=()=>{ d.idx++; render(); };
+  $('#drillDrop').onclick=()=>{ delete S.errors.items[it.key]; Store.saveErrors(S.errors); d.idx++; d.revealed=false; toast('已移出错题本'); render(); };
+}
+function markToday(){ const k=todayKey(); if(!S.profile.dayLog[k]){ S.profile.dayLog[k]=true; Store.saveProfile(S.profile); } }
+function orderedMaterials(){ const arr=Object.values(S.materials); arr.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)); return arr; }
+function currentMaterial(){ return orderedMaterials().find(m=>m.status!=='done')||null; }
+function doneCount(){ return orderedMaterials().filter(m=>m.status==='done').length; }
+function newMaterial(){ return { id:uid(), createdAt:Date.now(), status:'draft', step:1, title:'', type:'', source:'', durationSec:0, audioName:'', transcript:'', startedAt:0, blind:{passes:0}, dict:{text:'', accuracy:0, checkedAt:0}, understood:{}, notes:{}, vocab:[], recited:{}, speed:{attempts:[]}, completedAt:0 }; }
+function saveUI(){ Store.lsSet('kl:ui',{view:S.view,curId:S.curId,sub:S.sub}); }
+
+/* ============ 播放器 ============ */
+const P = { el:$('#player'), matId:null, url:null, A:null, B:null, loop:false, rate:1, onEnded:null, blobMissing:false };
+async function loadAudio(m){
+  if(P.matId===m.id && P.url) return true;
+  const blob=await AudioStore.get(m.id);
+  if(P.url){ URL.revokeObjectURL(P.url); P.url=null; }
+  P.matId=m.id; P.A=P.B=null; P.loop=false;
+  if(!blob){ P.blobMissing=true; P.el.removeAttribute('src'); return false; }
+  P.blobMissing=false; P.url=URL.createObjectURL(blob); P.el.src=P.url; P.el.playbackRate=P.rate; return true;
+}
+P.el.addEventListener('timeupdate',()=>{ if(P.loop&&P.A!=null&&P.B!=null&&P.el.currentTime>=P.B){ P.el.currentTime=P.A; } updatePlayerUI(); });
+P.el.addEventListener('ended',()=>{ updatePlayerUI(); if(P.onEnded) P.onEnded(); });
+P.el.addEventListener('play',updatePlayerUI); P.el.addEventListener('pause',updatePlayerUI); P.el.addEventListener('loadedmetadata',updatePlayerUI);
+function playerHTML(opts={}){
+  const seg=opts.segment? `<div class="seg"><button class="btn sm" data-p="A">A</button><button class="btn sm" data-p="B">B</button><button class="btn sm" data-p="loop">循环</button></div>`:'';
+  const back=opts.back!==false? `<button class="btn sm" data-p="-3">‹3s</button><button class="btn sm" data-p="-5">‹5s</button>`:'';
+  const speed=opts.speed? `<select class="btn sm" data-p="rate" aria-label="语速"><option value="0.75">0.75×</option><option value="0.85">0.85×</option><option value="1" selected>1.0×</option></select>`:'';
+  return `<div class="player" id="playerBox">
+    <input type="range" id="seek" min="0" max="1000" value="0" aria-label="进度">
+    <div class="time"><span id="tCur" class="num">0:00</span><span id="tDur" class="num">0:00</span></div>
+    <div class="ctl"><button class="play" data-p="toggle" aria-label="播放/暂停">▶</button>${back}${speed}${seg}</div>
+    <div class="hint" id="pHint" hidden></div>
+  </div>`;
+}
+function bindPlayer(root){
+  const box=$('#playerBox',root); if(!box) return;
+  if(P.blobMissing){ const h=$('#pHint',box); h.hidden=false; h.innerHTML='这台设备上没有这篇的音频文件。音频只存在选材时用的那台设备里，换了设备要重新选一次同一个文件。 <label class="btn sm" style="display:inline-block">重新选择音频<input type="file" accept="audio/*" id="reAudio" hidden></label>'; $('#reAudio',box).onchange=async e=>{ const f=e.target.files[0]; if(!f) return; await AudioStore.put(P.matId,f); P.url=null; await loadAudio(S.materials[P.matId]); toast('音频已接回'); render(); }; }
+  box.addEventListener('click',e=>{
+    const b=e.target.closest('[data-p]'); if(!b||b.tagName==='SELECT') return; const k=b.dataset.p; const el=P.el;
+    if(k==='toggle'){ if(el.paused) el.play().catch(()=>toast('这台设备暂时放不了这个文件')); else el.pause(); }
+    else if(k==='-3'){ el.currentTime=Math.max(0,el.currentTime-3); }
+    else if(k==='-5'){ el.currentTime=Math.max(0,el.currentTime-5); }
+    else if(k==='A'){ P.A=el.currentTime; if(P.B!=null&&P.B<=P.A) P.B=null; toast('A 点 '+fmtTime(P.A)); }
+    else if(k==='B'){ if(P.A==null){toast('先点 A');return;} P.B=el.currentTime; if(P.B<=P.A){toast('B 要在 A 后面');return;} P.loop=true; el.currentTime=P.A; el.play().catch(()=>{}); toast(`循环 ${fmtTime(P.A)}–${fmtTime(P.B)}`); }
+    else if(k==='loop'){ if(P.A==null||P.B==null){toast('先设 A、B 两点');return;} P.loop=!P.loop; toast(P.loop?'循环开':'循环关'); }
+    updatePlayerUI();
+  });
+  const sel=$('[data-p=rate]',box); if(sel){ sel.value=String(P.rate); sel.onchange=()=>{ P.rate=parseFloat(sel.value); P.el.playbackRate=P.rate; }; }
+  const seek=$('#seek',box); seek.oninput=()=>{ if(P.el.duration) P.el.currentTime=P.el.duration*seek.value/1000; };
+  updatePlayerUI();
+}
+function updatePlayerUI(){
+  const box=$('#playerBox'); if(!box) return; const el=P.el;
+  $('#tCur',box).textContent=fmtTime(el.currentTime); $('#tDur',box).textContent=fmtTime(el.duration||0);
+  if(el.duration) $('#seek',box).value=Math.round(el.currentTime/el.duration*1000);
+  $('.play',box).textContent=el.paused?'▶':'❚❚';
+  box.querySelectorAll('[data-p=A],[data-p=B],[data-p=loop]').forEach(b=>{ const k=b.dataset.p; b.classList.toggle('on', k==='A'?P.A!=null : k==='B'?P.B!=null : P.loop); });
+}
+
+/* ============ 渲染：首页 ============ */
+function render(){
+  saveUI();
+  $('#backBtn').hidden = S.view==='home';
+  $('#homeView').hidden = S.view!=='home'; $('#matView').hidden = S.view!=='mat'; $('#drillView').hidden = S.view!=='drill';
+  if(S.view==='home'){ $('#title').textContent='啃料十篇'; $('#subTitle').textContent='尚雯婕听写背诵法'; renderHome(); }
+  else if(S.view==='drill') renderDrill();
+  else renderMaterial();
+}
+function renderHome(){
+  const list=orderedMaterials(); const cur=currentMaterial(); const done=doneCount();
+  const slots=[]; for(let i=0;i<10;i++){ const m=list[i]; if(!m) slots.push(`<div class="slot empty"><span class="n">${i+1}</span><span class="t muted">—</span></div>`);
+    else slots.push(`<button class="slot ${m.status==='done'?'done':'cur'}" data-open="${m.id}"><span class="n">${i+1}</span><span class="t">${esc(m.title||'未命名')}</span>${m.status==='done'?'<span class="n">✓</span>':`<span class="n">第${m.step}步</span>`}</button>`); }
+  // 近 28 天
+  const days=[]; const now=new Date(); let streak=0; for(let i=27;i>=0;i--){ const d=new Date(now); d.setDate(now.getDate()-i); const k=todayKey(d); const on=!!S.profile.dayLog[k]; days.push(`<div class="day ${on?'on':''} ${i===0?'today':''}" title="${k}"></div>`); }
+  for(let i=0;;i++){ const d=new Date(now); d.setDate(now.getDate()-i); if(S.profile.dayLog[todayKey(d)]) streak++; else if(i===0) continue; else break; }
+  const total=Object.keys(S.profile.dayLog).length;
+  const pend=pendingErrors(), grad=errorItems().filter(x=>x.streak>=GRADUATE);
+  let curCard='';
+  if(cur){ const day=cur.startedAt? daysBetween(cur.startedAt,Date.now())+1 : 0;
+    curCard=`<div class="card"><div class="eyebrow">正在啃 · 第 ${list.indexOf(cur)+1} 篇</div><h2>${esc(cur.title||'还没起名')}</h2>
+      <div class="row small muted">${cur.type?esc(TYPES[cur.type]||cur.type)+' · ':''}${cur.durationSec?fmtTime(cur.durationSec)+' · ':''}${day?`第 ${day} 天 / 约 30 天`:'尚未开始'}</div>
+      <div class="steps" style="margin-top:10px">${STEPS.map((n,i)=>`<div class="step ${i+1<cur.step?'done':i+1===cur.step?'cur':'lock'}"><span class="k">0${i+1}</span><span class="nm">${n}</span></div>`).join('')}</div>
+      <button class="btn primary block" style="margin-top:12px" data-open="${cur.id}">继续</button></div>`;
+  } else if(done<10){
+    curCard=`<div class="card"><div class="eyebrow">第 ${done+1} 篇</div><h2>${done===0?'找一篇 20 分钟左右的音频，开始':'上一篇啃完了，开下一篇'}</h2>
+      <p class="small muted" style="margin:6px 0 12px">一次只啃一篇。选材、听写、吃透背诵、背到原速，四步走完才算一篇。</p>
+      <button class="btn primary block" id="newMat">开始选材</button></div>`;
+  } else {
+    curCard=`<div class="card"><div class="eyebrow">十篇已完成</div><h2>按她的说法，到这里英语基本能当工作语言了</h2><p class="small muted">想继续就再开一轮。</p><button class="btn primary block" id="newMat">再开一篇</button></div>`;
+  }
+  $('#homeView').innerHTML=`
+    ${curCard}
+    <div class="card"><div class="row" style="justify-content:space-between"><h2>十篇书架</h2><span class="chip ${done?'ok':''}">${done} / 10</span></div>
+      <p class="hint" style="margin:4px 0 10px">她的例子：一篇 20 分钟音频，一个月吃透一篇，十篇十个月。</p>
+      <div class="shelf">${slots.join('')}</div></div>
+    <div class="card"><div class="row" style="justify-content:space-between"><h2>错题本</h2><span class="small muted num">待练 ${pend.length} · 已过关 ${grad.length}</span></div>
+      <p class="hint" style="margin:4px 0 10px">核对时漏掉、写错的词自动记进来并计次；吃透时也能把整句记为错题。用原文里那句话做填空反复练，连对三次过关，再错从头计。</p>
+      <div class="row"><button class="btn primary" id="drillBtn" ${pend.length?'':'disabled'}>练一组（${Math.min(10,pend.length)} 题）</button></div>
+      ${pend.length||grad.length?`<details style="margin-top:10px"><summary>看全部</summary><div class="errlist">${pend.concat(grad).map(x=>`<div class="erow ${x.streak>=GRADUATE?'ok':''}"><b>${x.type==='word'?esc(x.word):esc(x.text.slice(0,48))+(x.text.length>48?'…':'')}</b><span class="num small muted">错 ${x.count} · 连对 ${x.streak}</span><button class="btn sm ghost" data-edel="${esc(x.key)}" aria-label="移除">×</button></div>`).join('')}</div></details>`:''}
+    </div>
+    <div class="card"><div class="row" style="justify-content:space-between"><h2>坚持</h2><span class="small muted num">连续 ${streak} 天 · 累计 ${total} 天</span></div>
+      <p class="hint" style="margin:4px 0 10px">近 28 天，有动作的日子会点亮。她原话里反复出现的词是「坚持」。</p>
+      <div class="days">${days.join('')}</div></div>
+    <div class="card method"><h2>这套方法本身</h2>
+      <p class="small muted" style="margin:6px 0">尚雯婕说的是「啃料」：把一篇素材拆成四步，整进整出。软件里每一步都设了门槛，不到标准不开下一步。</p>
+      <ol class="small">
+        <li><b>选材。</b>自己感兴趣的新闻、广播、访谈、演讲、书，20 分钟左右，之前没听过。文学、诗歌、影视对白不选，因为语法不够工整、排列不够实用。</li>
+        <li><b>听写。</b>先盲听几遍熟悉上下文，再一句一句逐字听写。听不出的查词典、联系上下文补，写到原文七成左右再核对。这一步是训练耳朵。</li>
+        <li><b>吃透，然后背。</b>每个单词、每个句型都弄明白，再一组一组意群去背，背到能脱稿。</li>
+        <li><b>背到原速。</b>背诵语速和音频一致，脱口而出，语感就是这么来的。</li>
+      </ol>
+      <details><summary>去哪找 20 分钟带原文的音频</summary><div class="small muted" style="margin-top:6px;display:grid;gap:4px">
+        <div>TED 演讲：官网每条都有逐字 transcript，18 分钟档的最合适。选材页顶上有 TED 入口，粘链接就行。</div>
+        <div>NPR、BBC 的新闻播客和访谈：多数在官网页面带 transcript。</div>
+        <div>有声书：挑一章 20 分钟左右，原文就是书的那一章。</div>
+        <div>原文粘进来后点「清理格式」，时间戳、(Laughter)、说话人名字会自动去掉。</div></div></details>
+    </div>
+    <div class="card"><div class="row" style="justify-content:space-between"><h2 class="small" style="font-family:var(--sans);font-weight:600">数据</h2><span class="chip ${Store.db?'ok':'warn'}">${Store.db?'已同步到你的账号':'仅存在这台设备'}</span></div>
+      <p class="hint" style="margin:6px 0 10px">进度和笔记${Store.db?'会跟着账号走':'存在浏览器里'}；音频文件只存在选音频的那台设备上。</p>
+      <div class="row"><button class="btn sm" id="exportBtn">复制备份 JSON</button><button class="btn sm" id="importBtn">粘贴导入</button></div><div id="importBox" hidden style="margin-top:8px"><textarea id="importTa" placeholder="把备份 JSON 粘到这里"></textarea><button class="btn sm primary" id="importGo" style="margin-top:6px">导入</button></div></div>`;
+  $('#homeView').querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openMaterial(b.dataset.open));
+  $('#drillBtn').onclick=startDrill;
+  $('#homeView').querySelectorAll('[data-edel]').forEach(b=>b.onclick=()=>{ delete S.errors.items[b.dataset.edel]; Store.saveErrors(S.errors); render(); });
+  const nm=$('#newMat'); if(nm) nm.onclick=()=>{ const m=newMaterial(); S.materials[m.id]=m; Store.saveMaterial(m,true); openMaterial(m.id); };
+  $('#exportBtn').onclick=async()=>{ const data={profile:S.profile, materials:S.materials, errors:S.errors}; const txt=JSON.stringify(data); try{ await navigator.clipboard.writeText(txt); toast('已复制，粘到备忘录里存好'); }catch{ const ta=$('#importTa'); $('#importBox').hidden=false; ta.value=txt; ta.select(); toast('剪贴板不可用，已放在下面的框里，全选复制'); } };
+  $('#importBtn').onclick=()=>{ $('#importBox').hidden=!$('#importBox').hidden; };
+  $('#importGo').onclick=()=>{ try{ const d=JSON.parse($('#importTa').value); if(!d.materials) throw 0; Object.values(d.materials).forEach(m=>{ if(m&&m.id){ S.materials[m.id]=m; Store.saveMaterial(m,true);} }); if(d.profile){ S.profile.dayLog=Object.assign({},S.profile.dayLog,d.profile.dayLog||{}); Store.saveProfile(S.profile);} if(d.errors&&d.errors.items){ S.errors.items=Object.assign({},S.errors.items,d.errors.items); Store.saveErrors(S.errors);} toast('导入完成'); render(); }catch{ toast('这段不是有效的备份'); } };
+}
+function openMaterial(id){ S.view='mat'; S.curId=id; S.sub[id]=S.sub[id]||{}; P.el.pause(); render(); window.scrollTo(0,0); }
+$('#backBtn').onclick=()=>{ S.view='home'; S.drill=null; P.el.pause(); render(); };
+
+/* ============ 渲染：素材四步 ============ */
+function renderMaterial(){
+  const m=S.materials[S.curId]; if(!m){ S.view='home'; return render(); }
+  const idx=orderedMaterials().indexOf(m)+1; const day=m.startedAt? daysBetween(m.startedAt,Date.now())+1:0;
+  $('#title').textContent=m.title||`第 ${idx} 篇`; $('#subTitle').textContent= m.status==='done'?'已完成':(day?`第 ${idx} 篇 · 第 ${day} 天`:`第 ${idx} 篇`);
+  const sub=S.sub[m.id]; const showStep = sub.step && sub.step<=m.step ? sub.step : m.step;
+  const rail=`<div class="steps" id="rail">${STEPS.map((n,i)=>{ const s=i+1; const cls= m.status==='done'||s<m.step?'done': s===m.step?'cur':'lock'; return `<button class="step ${cls} ${s===showStep?'on':''}" data-s="${s}" style="${s===showStep?'box-shadow:0 0 0 2px var(--accent)':''}"><span class="k">0${s}${cls==='lock'?' 🔒':cls==='done'?' ✓':''}</span><span class="nm">${n}</span></button>`; }).join('')}</div>`;
+  let body='';
+  if(showStep===1) body=stepSelect(m); else if(showStep===2) body=stepDictation(m); else if(showStep===3) body=stepDigest(m); else body=stepSpeed(m);
+  $('#matView').innerHTML=rail+body;
+  $('#rail').querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{ const s=+b.dataset.s; if(s>m.step && m.status!=='done'){ toast(lockReason(m,s)); return; } S.sub[m.id].step=s; render(); });
+  bindStep(m, showStep);
+}
+function lockReason(m,s){ return ['', '', '第一步选好材、锁好原文，才开听写。', '听写核对到七成以上，才看原文、开始吃透。', '每句吃透、每段能脱稿，才练原速。'][s]; }
+
+/* ---------- 第一步：选材 ---------- */
+function stepSelect(m){
+  const locked = m.step>1;
+  const dur=m.durationSec; let durMsg='', durCls='';
+  if(dur){ const min=dur/60; if(min>=15&&min<=25){durMsg=`${fmtTime(dur)}，接近 20 分钟，正好。`;durCls='ok';} else if(min<10){durMsg=`${fmtTime(dur)}，太短了。这套方法要 20 分钟左右的整段素材，换一条。`;durCls='bad';} else if(min>40){durMsg=`${fmtTime(dur)}，太长了，一个月啃不完。换一条或剪成 20 分钟。`;durCls='bad';} else {durMsg=`${fmtTime(dur)}，和 20 分钟有点差距，可以用，但心里有数。`;durCls='warn';} }
+  const wc=wordCount(m.transcript);
+  if(locked){
+    return `<div class="card"><div class="eyebrow">01 选材 · 已锁定</div><h2>${esc(m.title)}</h2>
+      <dl class="kv" style="margin-top:8px"><dt>类型</dt><dd>${esc(TYPES[m.type]||m.type)}</dd><dt>音频</dt><dd>${esc(m.audioName)} · ${fmtTime(m.durationSec)}</dd><dt>原文</dt><dd>${wc} 词 · ${m.step>=3?'已核对，可查看':'锁定中，核对前不显示'}</dd>${m.source?`<dt>来源</dt><dd>${esc(m.source)}</dd>`:''}<dt>开始</dt><dd>${new Date(m.startedAt).toLocaleDateString('zh-CN')}</dd></dl>
+      <div style="margin-top:14px" id="dangerZone"><button class="btn sm danger ghost" id="delAsk">放弃这篇</button><div class="inline-confirm" id="delConfirm" hidden><span>连同听写、笔记一起删掉，不可恢复。</span><button class="btn sm danger" id="delGo">确定删除</button><button class="btn sm" id="delNo">算了</button></div></div></div>`;
+  }
+  return `<div class="card"><div class="eyebrow">01 选材</div><h2>找一篇你真想听懂的</h2>
+    <p class="small muted" style="margin:6px 0 14px">她的标准：感兴趣、20 分钟左右、之前没接触过。新闻、访谈、演讲、纪录片、书都行；文学、诗歌、影视对白不行。原文现在就要粘进来，保存后会锁起来，听写核对前你看不到它。</p>
+    <div class="stack" style="margin-top:0">
+      <details class="ted" ${m.source&&tedSlug(m.source)?'open':''}><summary>从 TED 来一篇（最省事：每条都有逐字稿）</summary>
+        <div class="stack" style="margin-top:10px;gap:10px">
+          <div class="small" style="color:var(--soft-ink)">精选 ${TED_LIB.length} 篇 17–21 分钟的演讲，按话题挑一篇；也可以在最下面粘任何 TED 链接。</div>
+          <div class="row" id="tedTopics" style="gap:6px">${['全部'].concat(TED_TOPICS).map((t,i)=>`<button type="button" class="btn sm ${i===0?'on':''}" data-topic="${t}">${t}</button>`).join('')}</div>
+          <div class="tedlist" id="tedList"></div>
+          <input type="text" id="tedUrl" value="${esc(tedSlug(m.source)?m.source:'')}" placeholder="或者粘任何 TED 演讲链接 https://www.ted.com/talks/…" inputmode="url">
+          <div id="tedOut" class="small muted">挑 18 分钟档的演讲，讲话量大约两千五到三千词。</div>
+        </div></details>
+      <label class="f"><span><b>标题</b></span><input type="text" id="fTitle" value="${esc(m.title)}" placeholder="例：TED · Why we sleep"></label>
+      <label class="f"><span><b>类型</b></span><select id="fType"><option value="">选一个</option>${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${m.type===k?'selected':''}>${v}</option>`).join('')}</select></label>
+      <label class="f"><span><b>来源</b>（可选，网址或节目名）</span><input type="text" id="fSource" value="${esc(m.source)}" placeholder="方便以后找回去"></label>
+      <div class="f"><span class="small muted"><b style="color:var(--fg)">音频文件</b>（mp3 / m4a 等，存在这台设备里）</span>
+        <div class="row"><label class="btn sm" style="display:inline-block">${m.audioName?'换一个文件':'选择音频'}<input type="file" accept="audio/*" id="fAudio" hidden></label><span class="small muted grow">${esc(m.audioName||'还没选')}</span></div>
+        ${durMsg?`<div class="note ${durCls}">${durMsg}</div>`:''}</div>
+      <label class="f"><span class="row" style="justify-content:space-between"><span><b>原文</b>（逐字稿）<span id="wcHint">${wc?` · 已 ${wc} 词 · 约 ${Math.round(wc/150)} 分钟讲话量`:''}</span></span><button type="button" class="btn sm" id="cleanBtn">清理格式</button></span><textarea id="fText" placeholder="粘贴整篇原文。时间戳、(Laughter)、说话人名字不用手删，点「清理格式」。">${esc(m.transcript)}</textarea></label>
+      <div class="note">保存后原文立刻锁定。接下来几周你只和耳朵打交道，直到听写核对过七成。</div>
+      <button class="btn primary block" id="startBtn">锁定原文，开始啃这篇</button>
+      <button class="btn sm ghost danger" id="delAsk">不要这篇了</button><div class="inline-confirm" id="delConfirm" hidden><span>删掉这篇草稿？</span><button class="btn sm danger" id="delGo">删除</button><button class="btn sm" id="delNo">算了</button></div>
+    </div></div>`;
+}
+function bindSelect(m){
+  const ask=$('#delAsk'); if(ask){ ask.onclick=()=>{$('#delConfirm').hidden=false;}; $('#delNo').onclick=()=>{$('#delConfirm').hidden=true;}; $('#delGo').onclick=async()=>{ delete S.materials[m.id]; await Store.deleteMaterial(m.id); AudioStore.del(m.id); S.view='home'; toast('已删除'); render(); }; }
+  if(m.step>1) return;
+  const save=()=>{ m.title=$('#fTitle').value.trim(); m.type=$('#fType').value; m.source=$('#fSource').value.trim(); m.transcript=$('#fText').value; Store.saveMaterial(m); };
+  ['#fTitle','#fType','#fSource','#fText'].forEach(s=>{ const el=$(s); el.addEventListener('change',save); el.addEventListener('blur',save); });
+  const wcHint=()=>{ const n=wordCount($('#fText').value); $('#wcHint').textContent= n?` · 已 ${n} 词 · 约 ${Math.round(n/150)} 分钟讲话量`:''; };
+  $('#fText').addEventListener('input',wcHint);
+  $('#cleanBtn').onclick=()=>{ const ta=$('#fText'); const r=cleanTranscript(ta.value); ta.value=r.text; wcHint(); save(); toast(r.removed>0?`清掉了 ${r.removed} 个词的时间戳 / 提示 / 人名`:'没发现要清的东西'); };
+  // TED 入口
+  const tedUrl=$('#tedUrl'), tedOut=$('#tedOut');
+  const renderTed=()=>{ const slug=tedSlug(tedUrl.value); if(!slug){ tedOut.className='small muted'; tedOut.textContent= tedUrl.value.trim()? '这不像 TED 演讲链接，要形如 ted.com/talks/演讲名' : '挑 18 分钟档的演讲，讲话量大约两千五到三千词。'; return; }
+    const base=`https://www.ted.com/talks/${slug}`; const title=tedTitle(slug);
+    tedOut.className='small'; tedOut.innerHTML=`<div class="stack" style="gap:8px;margin-top:0">
+      <div class="row"><span class="chip">${esc(title)}</span><button type="button" class="btn sm" id="tedFill">填入标题、类型、来源</button></div>
+      <div><b>① 逐字稿</b>：<a href="${base}/transcript?language=en" target="_blank" rel="noopener">打开英文逐字稿页</a>，全选复制，粘到下面「原文」里，点「清理格式」。</div>
+      <div><b>② 音频</b>：打开 <a href="${base}" target="_blank" rel="noopener">演讲页</a>，点「Share / 分享」里的「Download / 下载」，选 Audio（mp3）。手机 Safari 会把它存进「文件」App 的「下载」文件夹，回到这里点「选择音频」从「文件」里选它。用电脑下再传到手机也行。TED 应用内的下载不是文件，用不了。</div>
+      <div class="muted">TED 不允许软件自动抓取，所以这两步要你自己点一下。</div></div>`;
+    $('#tedFill').onclick=()=>{ if(!$('#fTitle').value.trim()) $('#fTitle').value='TED · '+title; $('#fType').value='speech'; $('#fSource').value=base; save(); toast('已填好标题、类型、来源'); }; };
+  tedUrl.addEventListener('input',renderTed); tedUrl.addEventListener('change',()=>{ const slug=tedSlug(tedUrl.value); if(slug&&!$('#fSource').value.trim()){ $('#fSource').value=`https://www.ted.com/talks/${slug}`; save(); } }); renderTed();
+  // 精选库
+  let topic='全部'; const list=$('#tedList');
+  const renderList=()=>{ const cur=tedSlug(tedUrl.value); list.innerHTML=TED_LIB.filter(x=>topic==='全部'||x.t===topic).map(x=>`<button type="button" class="tedi ${x.s===cur?'on':''}" data-slug="${x.s}"><span class="row" style="justify-content:space-between;gap:6px"><b>${esc(x.n)}</b><span class="num small muted" style="flex:none">约 ${x.m} 分</span></span><span class="small muted">${esc(x.p)} · ${esc(x.t)}</span><span class="small">${esc(x.d)}</span></button>`).join('');
+    list.querySelectorAll('[data-slug]').forEach(b=>b.onclick=()=>{ const x=TED_LIB.find(y=>y.s===b.dataset.slug); tedUrl.value=`https://www.ted.com/talks/${x.s}`; renderTed(); $('#fTitle').value='TED · '+x.n; $('#fType').value='speech'; $('#fSource').value=tedUrl.value; save(); renderList(); toast('已选《'+x.n+'》，下一步去拿逐字稿'); $('#tedOut').scrollIntoView({behavior:'smooth',block:'center'}); }); };
+  $('#tedTopics').querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>{ topic=b.dataset.topic; $('#tedTopics').querySelectorAll('[data-topic]').forEach(c=>c.classList.toggle('on',c===b)); renderList(); });
+  renderList();
+  $('#fAudio').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; save();
+    toast('正在读音频时长…'); const url=URL.createObjectURL(f); const a=new Audio(); a.preload='metadata';
+    const dur=await new Promise(res=>{ a.onloadedmetadata=()=>res(a.duration); a.onerror=()=>res(0); a.src=url; setTimeout(()=>res(a.duration||0),8000); });
+    URL.revokeObjectURL(url);
+    if(!dur||!isFinite(dur)){ toast('读不出这个文件的时长，换个 mp3 试试'); return; }
+    await AudioStore.put(m.id,f); m.audioName=f.name; m.durationSec=Math.round(dur); P.url=null; P.matId=null; Store.saveMaterial(m,true); render(); };
+  $('#startBtn').onclick=()=>{ save();
+    const wc=wordCount(m.transcript); const min=m.durationSec/60;
+    if(!m.title) return toast('先起个标题');
+    if(!m.type) return toast('选一下类型');
+    if(!m.durationSec) return toast('还没选音频文件');
+    if(min<10) return toast('这条不到 10 分钟，太短，换一条 20 分钟左右的');
+    if(min>40) return toast('这条超过 40 分钟，一个月啃不完，换一条');
+    if(wc<120) return toast('原文太短或还没粘，逐字稿要先放进来才能锁');
+    if(wc < m.durationSec*0.6) return toast(`原文只有 ${wc} 词，20 分钟的音频通常两三千词，看看是不是粘漏了`);
+    m.step=2; m.status='active'; m.startedAt=Date.now(); S.sub[m.id]={step:2,phase:'blind'}; Store.saveMaterial(m,true); toast('原文已锁定。先盲听。'); render(); };
+}
+
+/* ---------- 第二步：听写 ---------- */
+function stepDictation(m){
+  const sub=S.sub[m.id]; const phase = m.step>2 ? (sub.phase||'check') : (sub.phase|| (m.blind.passes>=2 ? (sub.phase||'blind') : 'blind'));
+  const canWrite=m.blind.passes>=2; const wcT=wordCount(m.transcript); const wcD=wordCount(m.dict.text); const ratio=wcT?wcD/wcT:0; const canCheck=ratio>=0.6;
+  const tabs=`<div class="subtabs"><button data-ph="blind" class="${phase==='blind'?'on':''}">盲听</button><button data-ph="write" class="${phase==='write'?'on':''}" ${canWrite?'':'disabled'}>逐句听写</button><button data-ph="check" class="${phase==='check'?'on':''}" ${canCheck||m.step>2?'':'disabled'}>核对</button></div>`;
+  let body='';
+  if(phase==='blind'){
+    body=`<div class="eyebrow">02 听写 · 盲听</div><h2>先整篇听几遍，熟悉上下文</h2>
+      <p class="small muted" style="margin:6px 0 12px">什么都别看，就听。不懂的地方放过去，先知道这篇大概在讲什么。整篇放完会自动记一遍，至少两遍再开始逐句听写。</p>
+      ${playerHTML({back:false})}
+      <div class="row" style="justify-content:space-between;margin-top:14px"><div><div class="eyebrow">已盲听</div><div class="big">${m.blind.passes}<span style="font-size:16px;color:var(--muted)"> 遍</span></div></div>
+        <div class="row"><button class="btn sm" id="passPlus">手动记一遍</button><button class="btn primary" id="toWrite" ${canWrite?'':'disabled'}>开始逐句听写</button></div></div>
+      <div class="note" style="margin-top:12px"><span class="chip lock">🔒 原文已锁定</span>&nbsp; 核对前看不到原文，这是方法的核心，不是软件的限制。</div>`;
+  } else if(phase==='write'){
+    body=`<div class="eyebrow">02 听写 · 逐句</div><h2>一句一句，逐字写下来</h2>
+      <p class="small muted" style="margin:6px 0 12px">A、B 两点圈住一句反复放，退 3 秒 5 秒都在。先不管对错，听到什么写什么。实在听不出再查词典、联系上下文猜，写到大约七成再去核对。</p>
+      ${playerHTML({segment:true,speed:true})}
+      <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small muted num">已写 ${wcD} 词 · 原文约 ${wcT} 词 · ${(ratio*100).toFixed(0)}%</span><span class="small muted">自动保存</span></div>
+      <textarea class="paper" id="dictTa" placeholder="从第一句开始…" spellcheck="false">${esc(m.dict.text)}</textarea>
+      <div class="row" style="margin-top:10px"><input type="text" id="lookupWord" class="grow" placeholder="查一个听到的词" style="padding:8px 10px"><a class="btn sm" id="lookupYd" href="#" target="_blank" rel="noopener">有道</a><a class="btn sm" id="lookupCb" href="#" target="_blank" rel="noopener">剑桥</a></div>
+      <button class="btn primary block" id="toCheck" style="margin-top:14px" ${canCheck?'':'disabled'}>${canCheck?'我写到七成了，去核对':`写到原文六成以上才能核对（现在 ${(ratio*100).toFixed(0)}%）`}</button>`;
+  } else {
+    const r=checkResult(m); const pass=r.acc>=0.7;
+    if(m.step>2 || pass){
+      body=`<div class="eyebrow">02 听写 · 核对</div><h2>命中 ${(r.acc*100).toFixed(0)}%，过线</h2>
+        <p class="small muted" style="margin:6px 0 12px">她说的是「听写出原文七成左右」。灰色是写对的，红色是漏掉或写错的原文，划掉的是你多写的。漏掉的词已经替你放进生词本和错题本，第三步接着用，首页能反复练。</p>
+        <div class="diff card" style="box-shadow:none">${r.html}</div>
+        <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small muted num">原文 ${r.n} 词 · 命中 ${r.matched} · 漏/错 ${r.missed.length} 处</span>${m.step===2?`<button class="btn primary" id="toDigest">进入第三步：吃透</button>`:`<span class="chip ok">已进入第三步</span>`}</div>`;
+    } else {
+      body=`<div class="eyebrow">02 听写 · 核对</div><h2>命中 ${(r.acc*100).toFixed(0)}%，还差一点</h2>
+        <p class="small muted" style="margin:6px 0 12px">她的标准是七成左右，到了才看原文。下面只标出你写的里哪些词原文里没有，不显示原文。回去再听，该查词典查词典，联系上下文把空补上。</p>
+        <div class="diff card" style="box-shadow:none">${r.mineHtml}</div>
+        <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small muted num">原文 ${r.n} 词 · 已命中 ${r.matched} · 还需 ${Math.max(0,Math.ceil(r.n*0.7)-r.matched)} 个词</span><button class="btn primary" id="backWrite">回去继续听写</button></div>`;
+    }
+  }
+  return `<div class="card">${tabs}${body}</div>`;
+}
+function checkResult(m){
+  const a=tokenize(m.transcript), b=tokenize(m.dict.text); const {matched,align}=alignWords(a,b);
+  const acc=a.length?matched/a.length:0; const missed=[]; const seen=new Set();
+  const html=align.map(x=> x.type==='ok'?`<span class="ok">${esc(x.a)}</span>`: x.type==='miss'?(missed.push(x.a),`<span class="miss">${esc(x.a)}</span>`):`<span class="extra">${esc(x.b)}</span>`).join(' ');
+  const mineHtml=align.filter(x=>x.type!=='miss').map(x=> x.type==='ok'?`<span class="ok">${esc(x.b)}</span>`:`<span class="extra">${esc(x.b)}</span>`).join(' ');
+  return {acc,matched,n:a.length,missed:missed.filter(w=>{ if(seen.has(w)) return false; seen.add(w); return true; }),html,mineHtml};
+}
+function bindDictation(m){
+  const sub=S.sub[m.id];
+  document.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>{ if(b.disabled) return; sub.phase=b.dataset.ph; render(); });
+  const phase=sub.phase||'blind';
+  if(phase==='blind'||phase==='write'){ loadAudio(m).then(()=>{ bindPlayer($('#matView')); }); }
+  if(phase==='blind'){
+    P.onEnded=()=>{ m.blind.passes++; Store.saveMaterial(m,true); toast(`整篇听完第 ${m.blind.passes} 遍`); render(); };
+    $('#passPlus').onclick=()=>{ m.blind.passes++; Store.saveMaterial(m,true); render(); };
+    $('#toWrite').onclick=()=>{ sub.phase='write'; render(); };
+  } else P.onEnded=null;
+  if(phase==='write'){
+    const ta=$('#dictTa'); let t; ta.addEventListener('input',()=>{ clearTimeout(t); t=setTimeout(()=>{ m.dict.text=ta.value; Store.saveMaterial(m); const wcT=wordCount(m.transcript), wcD=wordCount(ta.value); const r=wcT?wcD/wcT:0; const btn=$('#toCheck'); if(btn){ btn.disabled=r<0.6; btn.textContent= r>=0.6?'我写到七成了，去核对':`写到原文六成以上才能核对（现在 ${(r*100).toFixed(0)}%）`; } },600); });
+    ta.addEventListener('blur',()=>{ m.dict.text=ta.value; Store.saveMaterial(m,true); });
+    const lw=$('#lookupWord'); const upd=()=>{ const w=encodeURIComponent(lw.value.trim()); $('#lookupYd').href=w?`https://dict.youdao.com/result?word=${w}&lang=en`:'#'; $('#lookupCb').href=w?`https://dictionary.cambridge.org/dictionary/english-chinese-simplified/${w}`:'#'; }; lw.addEventListener('input',upd); upd();
+    $('#toCheck').onclick=()=>{ m.dict.text=ta.value; Store.saveMaterial(m,true);
+      const r=checkResult(m); r.missed.filter(w=>w.length>2&&!/^\d+$/.test(w)&&!STOP.has(w)).forEach(w=>logErrorWord(m,w)); Store.saveErrors(S.errors);
+      sub.phase='check'; P.el.pause(); render(); };
+  }
+  if(phase==='check'){
+    const bw=$('#backWrite'); if(bw) bw.onclick=()=>{ sub.phase='write'; render(); };
+    const td=$('#toDigest'); if(td) td.onclick=()=>{ const r=checkResult(m); if(r.acc<0.7) return toast('还没到七成');
+      m.dict.accuracy=r.acc; m.dict.checkedAt=Date.now(); const have=new Set(m.vocab.map(v=>v.word));
+      r.missed.filter(w=>w.length>2&&!/^\d+$/.test(w)&&!STOP.has(w)).forEach(w=>{ if(!have.has(w)) m.vocab.push({word:w,meaning:'',from:'dict'}); });
+      m.step=3; S.sub[m.id]={step:3,phase:'digest'}; Store.saveMaterial(m,true); toast('原文解锁。现在把每句吃透。'); render(); };
+  }
+}
+
+/* ---------- 第三步：吃透 · 背诵 ---------- */
+function stepDigest(m){
+  const sub=S.sub[m.id]; const st=buildStructure(m.transcript); const total=st.sents.length; const okN=st.sents.filter((_,i)=>m.understood[i]).length; const allOk=okN===total&&total>0;
+  const phase= sub.phase==='recite' ? (allOk||m.step>3?'recite':'digest') : 'digest';
+  const tabs=`<div class="subtabs"><button data-ph="digest" class="${phase==='digest'?'on':''}">吃透 <span class="num">${okN}/${total}</span></button><button data-ph="recite" class="${phase==='recite'?'on':''}" ${allOk||m.step>3?'':'disabled'}>背到脱稿</button></div>`;
+  let body='';
+  if(phase==='digest'){
+    let lastP=-1; const items=st.sents.map((s,i)=>{ const ph= st.paraOf[i]!==lastP ? (lastP=st.paraOf[i], `<div class="para-h">意群 ${st.paraOf[i]+1}</div>`) : '';
+      const vs=new Set(m.vocab.map(v=>v.word)); const words=s.split(/(\s+)/).map(w=>{ if(/^\s+$/.test(w)) return w; const key=tokenize(w)[0]; return key?`<span class="w ${vs.has(key)?'v':''}" data-w="${esc(key)}" data-i="${i}">${esc(w)}</span>`:esc(w); }).join('');
+      return `${ph}<div class="sent ${m.understood[i]?'ok':''}" data-i="${i}"><div class="en">${words}</div><textarea data-note="${i}" placeholder="句型 / 语法 / 为什么这么说">${esc(m.notes[i]||'')}</textarea><div class="row" style="justify-content:space-between"><label class="row small"><input type="checkbox" data-ok="${i}" ${m.understood[i]?'checked':''}> 这句吃透了</label><button class="btn sm ghost ${S.errors.items['s:'+m.id+':'+i]?'on':''}" data-err="${i}">${S.errors.items['s:'+m.id+':'+i]?'已在错题本':'记为错题'}</button></div></div>`; }).join('');
+    const vocab=m.vocab.length? m.vocab.map((v,k)=>`<div class="vi"><b>${esc(v.word)}</b><input type="text" data-vm="${k}" value="${esc(v.meaning)}" placeholder="释义 / 用法"><span class="row" style="gap:4px"><a class="btn sm" href="https://dict.youdao.com/result?word=${encodeURIComponent(v.word)}&lang=en" target="_blank" rel="noopener">查</a><button class="btn sm ghost" data-vdel="${k}" aria-label="删除">×</button></span></div>`).join('') : '<div class="hint">点上面句子里的任何一个词，就能加进来。</div>';
+    body=`<div class="eyebrow">03 吃透</div><h2>每个单词、每个句型都弄明白</h2>
+      <p class="small muted" style="margin:6px 0 12px">这一步她的要求是「把每个单词、每个句型吃透」。点任何一个词进生词本，句子下面写它的句型和语法。全部勾完才开始背。</p>
+      <div>${items}</div>
+      <div class="card" style="margin-top:14px;box-shadow:none"><div class="row" style="justify-content:space-between"><h2 style="font-size:15px">生词本 <span class="num muted">${m.vocab.length}</span></h2><span class="hint">听写漏掉的词已自动放进来</span></div><div class="vocab" style="margin-top:10px">${vocab}</div></div>
+      <button class="btn primary block" id="toRecite" style="margin-top:14px" ${allOk?'':'disabled'}>${allOk?'全部吃透，开始背':`还有 ${total-okN} 句没勾`}</button>`;
+  } else {
+    const paras=[]; for(let p=0;p<st.paraCount;p++){ paras.push(st.sents.map((s,i)=>st.paraOf[i]===p?s:null).filter(Boolean)); }
+    const okP=paras.filter((_,p)=>m.recited[p]).length; const allP=okP===paras.length&&paras.length>0;
+    const cards=paras.map((ss,p)=>{ const mode=(sub.mode||{})[p]||'full'; const txt=ss.join(' '); const shown= mode==='full'?esc(txt): mode==='first'? esc(firstLetters(txt)) : `<span class="muted">（${ss.length} 句 · ${wordCount(txt)} 词）</span>`;
+      return `<div class="recite-p ${m.recited[p]?'ok':''}"><div class="row" style="justify-content:space-between"><span class="para-h" style="margin:0">意群 ${p+1}</span><span class="row" style="gap:4px"><button class="btn sm ${mode==='full'?'on':''}" data-mode="full" data-p="${p}">全文</button><button class="btn sm ${mode==='first'?'on':''}" data-mode="first" data-p="${p}">首字母</button><button class="btn sm ${mode==='hide'?'on':''}" data-mode="hide" data-p="${p}">全隐</button></span></div>
+        <div class="txt">${shown}</div><label class="row small"><input type="checkbox" data-rp="${p}" ${m.recited[p]?'checked':''}> 这段全隐也能脱稿背出</label></div>`; }).join('');
+    body=`<div class="eyebrow">03 背诵</div><h2>一组一组意群去背，背到脱稿</h2>
+      <p class="small muted" style="margin:6px 0 12px">先看全文背，再只留首字母，最后全隐。每段全隐都能背出来再打勾。音频留着，想听哪段用 A、B 圈起来听。</p>
+      ${playerHTML({segment:true})}
+      <div class="stack">${cards}</div>
+      <button class="btn primary block" id="toSpeed" style="margin-top:14px" ${allP?'':'disabled'}>${allP?'全篇能脱稿，去练原速':`还有 ${paras.length-okP} 段没脱稿`}</button>`;
+  }
+  return `<div class="card">${tabs}${body}</div>`;
+}
+function bindDigest(m){
+  const sub=S.sub[m.id]; const st=buildStructure(m.transcript);
+  document.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>{ if(b.disabled) return; sub.phase=b.dataset.ph; render(); });
+  const phase=sub.phase==='recite'?'recite':'digest';
+  if(phase==='digest'){
+    P.onEnded=null;
+    document.querySelectorAll('[data-ok]').forEach(c=>c.onchange=()=>{ m.understood[c.dataset.ok]=c.checked; if(!c.checked) delete m.understood[c.dataset.ok]; Store.saveMaterial(m); c.closest('.sent').classList.toggle('ok',c.checked); const okN=st.sents.filter((_,i)=>m.understood[i]).length; const all=okN===st.sents.length; const b=$('#toRecite'); b.disabled=!all; b.textContent=all?'全部吃透，开始背':`还有 ${st.sents.length-okN} 句没勾`; document.querySelector('[data-ph=digest]').innerHTML=`吃透 <span class="num">${okN}/${st.sents.length}</span>`; });
+    document.querySelectorAll('[data-note]').forEach(t=>{ let k; t.addEventListener('input',()=>{ clearTimeout(k); k=setTimeout(()=>{ m.notes[t.dataset.note]=t.value; if(!t.value) delete m.notes[t.dataset.note]; Store.saveMaterial(m); },600); }); });
+    document.querySelectorAll('.w[data-w]').forEach(w=>w.onclick=()=>openWordPop(m,w.dataset.w,+w.dataset.i));
+    document.querySelectorAll('[data-err]').forEach(b=>b.onclick=()=>{ const i=+b.dataset.err; const k='s:'+m.id+':'+i; if(S.errors.items[k]){ delete S.errors.items[k]; toast('已移出错题本'); } else { logErrorSentence(m,i,st.sents[i]); toast('记为错题，首页可以练'); } Store.saveErrors(S.errors); b.classList.toggle('on',!!S.errors.items[k]); b.textContent=S.errors.items[k]?'已在错题本':'记为错题'; });
+    document.querySelectorAll('[data-vm]').forEach(i=>{ let k; i.addEventListener('input',()=>{ clearTimeout(k); k=setTimeout(()=>{ m.vocab[+i.dataset.vm].meaning=i.value; Store.saveMaterial(m); },600); }); });
+    document.querySelectorAll('[data-vdel]').forEach(b=>b.onclick=()=>{ m.vocab.splice(+b.dataset.vdel,1); Store.saveMaterial(m,true); render(); });
+    $('#toRecite').onclick=()=>{ sub.phase='recite'; sub.mode={}; render(); };
+  } else {
+    loadAudio(m).then(()=>bindPlayer($('#matView'))); P.onEnded=null;
+    document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{ sub.mode=sub.mode||{}; sub.mode[b.dataset.p]=b.dataset.mode; render(); });
+    document.querySelectorAll('[data-rp]').forEach(c=>c.onchange=()=>{ if(c.checked&&((sub.mode||{})[c.dataset.rp]||'full')!=='hide'){ c.checked=false; toast('先切到「全隐」，背出来再勾'); return; } m.recited[c.dataset.rp]=c.checked; if(!c.checked) delete m.recited[c.dataset.rp]; Store.saveMaterial(m,true); render(); });
+    const ts=$('#toSpeed'); ts.onclick=()=>{ m.step=4; S.sub[m.id]={step:4}; Store.saveMaterial(m,true); toast('最后一步：背到和音频一样快。'); render(); };
+  }
+}
+function openWordPop(m,word,si){
+  const pop=$('#wordPop'); const ex=m.vocab.find(v=>v.word===word);
+  pop.hidden=false; pop.innerHTML=`<div class="row" style="justify-content:space-between"><b>${esc(word)}</b><button class="iconbtn" id="wpClose" aria-label="关闭">×</button></div>
+    <input type="text" id="wpMeaning" value="${esc(ex?ex.meaning:'')}" placeholder="释义 / 这里的用法">
+    <div class="row"><a class="btn sm" href="https://dict.youdao.com/result?word=${encodeURIComponent(word)}&lang=en" target="_blank" rel="noopener">有道</a><a class="btn sm" href="https://dictionary.cambridge.org/dictionary/english-chinese-simplified/${encodeURIComponent(word)}" target="_blank" rel="noopener">剑桥</a><span class="grow"></span>${ex?`<button class="btn sm danger" id="wpDel">移出</button>`:''}<button class="btn sm primary" id="wpSave">${ex?'保存':'加入生词本'}</button></div>`;
+  $('#wpClose').onclick=()=>{pop.hidden=true;};
+  $('#wpSave').onclick=()=>{ const mn=$('#wpMeaning').value.trim(); if(ex) ex.meaning=mn; else m.vocab.push({word,meaning:mn,from:si}); Store.saveMaterial(m,true); pop.hidden=true; render(); };
+  const d=$('#wpDel'); if(d) d.onclick=()=>{ m.vocab=m.vocab.filter(v=>v.word!==word); Store.saveMaterial(m,true); pop.hidden=true; render(); };
+  $('#wpMeaning').focus();
+}
+
+/* ---------- 第四步：原速 ---------- */
+const SW={running:false,start:0,raf:0,peeked:false};
+function stepSpeed(m){
+  const sub=S.sub[m.id]; const dur=m.durationSec; const lo=Math.round(dur*0.85), hi=Math.round(dur*1.15);
+  const att=m.speed.attempts.slice().reverse().map(a=>{ const d=(a.sec-dur)/dur; const cls=a.valid===false?'lock':Math.abs(d)<=0.15?'ok':'warn'; return `<div class="attempt"><span class="num">${fmtTime(a.sec)}</span><span class="small muted">${new Date(a.at).toLocaleDateString('zh-CN')} · ${a.valid===false?'看了原文，不算':(d>0?'慢':'快')+Math.abs(d*100).toFixed(0)+'%'}</span><span class="chip ${cls}">${a.valid===false?'无效':Math.abs(d)<=0.15?'达标':'未达标'}</span></div>`; }).join('');
+  const passed=m.speed.attempts.some(a=>a.valid!==false&&Math.abs(a.sec-dur)/dur<=0.15);
+  const showText=!!sub.showText;
+  return `<div class="card"><div class="eyebrow">04 原速</div><h2>背到和音频一样快，脱口而出</h2>
+    <p class="small muted" style="margin:6px 0 12px">她的最后一关：背诵语速和原音频一致。原文默认藏起来，按下开始，整篇背完按停，看用时和音频差多少。差 15% 以内算达标。中途看原文，这一次就不算。</p>
+    <div class="row" style="justify-content:space-around;text-align:center;margin:8px 0 14px"><div><div class="eyebrow">音频时长</div><div class="big">${fmtTime(dur)}</div><div class="hint num">达标区间 ${fmtTime(lo)}–${fmtTime(hi)}</div></div><div><div class="eyebrow">本次用时</div><div class="big" id="swTime">0:00</div><div class="hint" id="swHint">&nbsp;</div></div></div>
+    <div class="row"><button class="btn primary grow" id="swBtn">开始背</button><button class="btn" id="peekBtn">${showText?'藏起原文':'看一眼原文'}</button></div>
+    ${showText?`<div class="diff card" style="box-shadow:none;margin-top:12px">${esc(m.transcript).replace(/\n/g,'<br>')}</div>`:''}
+    <details style="margin-top:14px"><summary>跟着音频一起背（影子跟读）</summary><div style="margin-top:8px">${playerHTML({segment:true,speed:true})}</div></details>
+    <div style="margin-top:14px"><div class="eyebrow">记录</div>${att||'<div class="hint">还没有记录。</div>'}</div>
+    ${passed&&m.status!=='done'?`<div class="note ok" style="margin-top:14px">已经有一次在原速区间内。这篇可以收了。</div><button class="btn primary block" id="finishBtn" style="margin-top:10px">这篇完成，收进书架</button>`:''}
+    ${m.status==='done'?`<div class="note ok" style="margin-top:14px">完成于 ${new Date(m.completedAt).toLocaleDateString('zh-CN')}。用了 ${daysBetween(m.startedAt,m.completedAt)+1} 天。</div>`:''}
+  </div>`;
+}
+function bindSpeed(m){
+  const sub=S.sub[m.id]; loadAudio(m).then(()=>bindPlayer($('#matView'))); P.onEnded=null;
+  const btn=$('#swBtn'), tm=$('#swTime'), hint=$('#swHint');
+  const tick=()=>{ if(!SW.running) return; tm.textContent=fmtTime((Date.now()-SW.start)/1000); SW.raf=requestAnimationFrame(tick); };
+  btn.onclick=()=>{ if(!SW.running){ SW.running=true; SW.start=Date.now(); SW.peeked=!!sub.showText; btn.textContent='背完了，停'; btn.classList.add('danger'); hint.textContent='计时中…'; tick(); }
+    else { SW.running=false; cancelAnimationFrame(SW.raf); const sec=Math.round((Date.now()-SW.start)/1000); if(sec<10){ toast('太短了，这次不记'); btn.textContent='开始背'; btn.classList.remove('danger'); hint.innerHTML='&nbsp;'; return; }
+      m.speed.attempts.push({sec,at:Date.now(),valid:!SW.peeked}); Store.saveMaterial(m,true); const d=(sec-m.durationSec)/m.durationSec; toast(SW.peeked?'记下了，但看了原文，不算达标':(Math.abs(d)<=0.15?'在原速区间内！':(d>0?'比原音频慢 ':'比原音频快 ')+Math.abs(d*100).toFixed(0)+'%')); render(); } };
+  $('#peekBtn').onclick=()=>{ sub.showText=!sub.showText; if(sub.showText&&SW.running) SW.peeked=true; render(); if(SW.running){ /* 保持计时显示 */ const t=$('#swTime'); const b=$('#swBtn'); b.textContent='背完了，停'; b.classList.add('danger'); const h=$('#swHint'); h.textContent='计时中…（已看原文，本次不算）'; const tk=()=>{ if(!SW.running) return; t.textContent=fmtTime((Date.now()-SW.start)/1000); SW.raf=requestAnimationFrame(tk); }; tk(); bindSpeedAfterRender(m); } };
+  const f=$('#finishBtn'); if(f) f.onclick=()=>{ m.status='done'; m.completedAt=Date.now(); Store.saveMaterial(m,true); toast('第 '+(orderedMaterials().indexOf(m)+1)+' 篇，啃完了。'); S.view='home'; render(); };
+}
+function bindSpeedAfterRender(m){ /* render() 已重绑；此处仅为语义占位 */ }
+function bindStep(m,step){ $('#wordPop').hidden=true; if(step===1) bindSelect(m); else if(step===2) bindDictation(m); else if(step===3) bindDigest(m); else bindSpeed(m); }
+
+/* ============ 启动 ============ */
+(async function boot(){
+  const local=Store.localAll(); if(local.profile) S.profile=Object.assign({dayLog:{},order:[]},local.profile); S.materials=local.materials||{};
+  const le=Store.lsGet('kl:errors'); if(le&&le.items) S.errors=le;
+  if(S.ui.view==='mat'&&S.ui.curId&&S.materials[S.ui.curId]){ S.view='mat'; S.curId=S.ui.curId; S.sub=S.ui.sub||{}; }
+  render();
+  await Store.init();
+  const remote=await Store.pullAll();
+  if(remote){
+    let changed=false;
+    if(remote.profile&&(remote.profile.updatedAt||0)>(S.profile.updatedAt||0)){ S.profile=Object.assign({dayLog:{},order:[]},remote.profile); changed=true; }
+    if(remote.errors&&remote.errors.items&&(remote.errors.updatedAt||0)>(S.errors.updatedAt||0)){ S.errors=remote.errors; Store.lsSet('kl:errors',S.errors); changed=true; }
+    else if(Object.keys(S.errors.items).length&&!remote.errors) Store.saveErrors(S.errors);
+    for(const [id,rm] of Object.entries(remote.materials)){ const lm=S.materials[id]; if(!lm||(rm.updatedAt||0)>(lm.updatedAt||0)){ S.materials[id]=rm; Store.lsSet('kl:m:'+id,rm); changed=true; } }
+    // 本地有而云端没有的，推上去
+    for(const m of Object.values(S.materials)){ if(!remote.materials[m.id]) Store.saveMaterial(m,true); }
+    if(changed||!document.activeElement||document.activeElement.tagName==='BODY') render(); else { /* 正在输入，不打断 */ }
+  } else { const chip=document.querySelector('#homeView .chip.warn, #homeView .chip.ok'); if(chip&&S.view==='home') render(); }
+})();
+</script>
+
+<script>
+// 离线缓存
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(() => {}); }); }
+// 装到桌面的提示（已经装好的不显示）
+(function(){
+  const standalone = window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+  if (standalone || window.Capacitor) return;
+  try { if (localStorage.getItem('kl:installTipHidden')) return; } catch (e) {}
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const b = document.createElement('div'); b.className = 'install-tip';
+  b.innerHTML = '<span>' + (isIOS
+    ? '装到桌面：在 Safari 里点底部「分享」，选「添加到主屏幕」。以后从桌面图标打开，不用登录，断网也能用；装好后数据才会长期保留。'
+    : '装到桌面：浏览器菜单里选「添加到主屏幕」或「安装应用」，以后像 App 一样打开。') + '</span><button type="button">知道了</button>';
+  document.body.appendChild(b);
+  b.querySelector('button').onclick = () => { b.remove(); try { localStorage.setItem('kl:installTipHidden', '1'); } catch (e) {} };
+})();
+</script>
+</body>
+</html>
