@@ -254,7 +254,7 @@ const TED_LIB=[
  {s:'dan_pink_the_puzzle_of_motivation',p:'Dan Pink',n:'The puzzle of motivation',sec:1116,lv:'难',d:'语速快，排比和反问多，节奏紧'},
  {s:'sir_ken_robinson_do_schools_kill_creativity',p:'Sir Ken Robinson',n:'Do schools kill creativity?',sec:1151,lv:'难',d:'英式幽默，临场发挥多，观众笑声不断'},
 ];
-function tedPlayerHTML(m){ const show=!!(S.sub[m.id]||{}).showVideo;
+function tedPlayerHTML(m){ const show=(S.sub[m.id]||{}).showVideo!==false;   // 默认露出画面：TED 嵌入播放器不带字幕，看着人讲更不容易走神
   return `<div class="tedplayer" id="tedBox"><div class="tedframe ${show?'show':''}"><iframe src="https://embed.ted.com/talks/${esc(m.ted)}" title="TED 播放器" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="tedcover"><span>画面已遮住，只听声音<br>点这块正中间开始或暂停</span></div></div>
     <div class="row" style="justify-content:space-between"><span class="hint grow">在线播放，要联网。进度条和倍速在播放器最下面那一条。<br><a href="https://embed.ted.com/talks/${esc(m.ted)}" target="_blank" rel="noopener">播放器没出来？点这里单独打开只有播放器的页面</a></span><button type="button" class="btn sm" id="tedCover">${show?'遮住画面':'显示画面'}</button></div></div>`; }
 /* TED：从链接取 slug；清洗逐字稿里的时间戳、舞台提示、说话人名 */
