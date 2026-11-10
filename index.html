@@ -289,6 +289,25 @@ function cleanTranscript(text){
   t=t.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').trim();
   return {text:t, removed: wordCount(before)-wordCount(t), chrome: tp.cut};
 }
+/* 素材包解析。三种形态都认：①纯文本 KENLIAO1:<base64(gzip(JSON))>（可当文件，也可直接粘贴）②纯 JSON ③旧的二进制包（KLPK1 + 头 + mp3） */
+async function gunzipB64(b64){
+  const bin=atob(b64.replace(/[^A-Za-z0-9+/=]/g,'')); const u8=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u8[i]=bin.charCodeAt(i);
+  if(typeof DecompressionStream==='undefined') throw new Error('这台手机的系统解不开压缩，需要 iOS 16.4 以上');
+  const out=await new Response(new Blob([u8]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  return new TextDecoder().decode(out);
+}
+async function parsePackage(input){
+  let u8=null, text='';
+  if(typeof input==='string') text=input;
+  else { u8=new Uint8Array(input); if(!u8.length) throw new Error('读到的文件是空的（0 字节），可能还没从微信存完整'); text=new TextDecoder().decode(u8.subarray(0,Math.min(u8.length,600000))); }
+  const t=text.replace(/^﻿/,'').trim(); const k=t.indexOf('KENLIAO1:');
+  try{
+    if(k>=0) return {head:JSON.parse(await gunzipB64(t.slice(k+9))), blob:null};
+    if(u8&&t.startsWith('KLPK1')){ const hl=new DataView(u8.buffer,u8.byteOffset,u8.byteLength).getUint32(6,true); const head=JSON.parse(new TextDecoder().decode(u8.subarray(10,10+hl))); return {head, blob:new Blob([u8.subarray(10+hl)],{type:'audio/mpeg'})}; }
+    if(t.startsWith('{')) return {head:JSON.parse(t), blob:null};
+  }catch(e){ throw new Error('素材包内容损坏（'+String(e&&e.message||e).slice(0,40)+'），长度 '+(u8?u8.length+' 字节':t.length+' 字')); }
+  throw new Error('这不是素材包：开头是「'+t.slice(0,14)+'」，'+(u8?'文件 '+u8.length+' 字节':'共 '+t.length+' 字'));
+}
 function firstLetters(s){ return s.replace(/[A-Za-zÀ-ɏ']+/g, w=>w[0]+'_'.repeat(Math.max(1,Math.min(w.length-1,6)))); }
 
 /* ============ 存储：云端 db（按人私有）+ 本地镜像；音频存设备 IndexedDB ============ */
@@ -551,8 +570,10 @@ function stepSelect(m){
     <p class="small muted" style="margin:6px 0 14px">她的标准：感兴趣、20 分钟左右、之前没接触过。新闻、访谈、演讲、纪录片、书都行；文学、诗歌、影视对白不行。最省事的是从下面的素材库里挑一篇，点一下就能开始。</p>
     <div class="stack" style="margin-top:0">
       <div class="libbox"><div class="row" style="justify-content:space-between"><b>TED · 在线听</b><span class="small muted">音频不用下载，在 App 里直接放</span></div>
-        <div class="row" style="gap:8px"><label class="btn sm primary" style="display:inline-block">导入素材包<input type="file" id="pkgFile" hidden></label><span class="small muted" id="pkgSt">电脑上打好的 .kenliao 文件，里面是原文</span></div>
-        <div class="hint">微信里点开收到的文件，右上角「…」选「用其他应用打开」，再选「存储到文件」。回这里点「导入素材包」，从「文件」里选它。导入后原文自动锁定，直接进盲听。</div>
+        <div class="row" style="gap:8px"><button type="button" class="btn sm primary" id="pkgPaste">粘贴素材包</button><label class="btn sm" style="display:inline-block">从文件导入<input type="file" id="pkgFile" hidden></label></div>
+        <textarea id="pkgText" aria-label="素材包文字" placeholder="「粘贴素材包」点了没反应的话，在这个小框里长按，选「粘贴」" style="min-height:44px;height:44px;font-size:13px"></textarea>
+        <div class="small muted" id="pkgSt">素材包是 Claude 在电脑上打好的一段文字，里面是加了密的原文，看不出内容。</div>
+        <div class="hint">最省事：微信里长按那条 KENLIAO 开头的消息，点「复制」，回这里点「粘贴素材包」。也可以收文件：点开文件，右上角「…」选「用其他应用打开」，「存储到文件」，再点「从文件导入」。导入后原文自动锁定，直接进盲听。</div>
         <details class="ted" ${m.ted?'open':''}><summary>或者自己选一篇，再把原文粘进来</summary>
           <div class="stack" style="margin-top:10px;gap:10px">
             <div class="small" style="color:var(--soft-ink)">十篇按难度从易到难。选好后往下，在「原文」那里粘贴或导入 txt。</div>
@@ -626,17 +647,21 @@ function bindSelect(m){
       busy=false; toast('下载好了，原文已锁定。先盲听。'); render(); window.scrollTo(0,0);
     }catch(e){ busy=false; pg.hidden=true; bar.style.width='0'; st.textContent='没下成，检查网络后再点一次'; console.warn(e); } };
   // 素材包：电脑上 pack_ted.py 打出来的单文件（6 字节标记 + 4 字节头长 + 头 JSON + mp3）
-  $('#pkgFile').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return; const st=$('#pkgSt'); st.textContent='读取中…';
-    try{ const buf=await f.arrayBuffer(); const u8=new Uint8Array(buf); const td=new TextDecoder();
-      if(td.decode(u8.subarray(0,6))!=='KLPK1\n') throw new Error('not a package');
-      const hl=new DataView(buf).getUint32(6,true); const head=JSON.parse(td.decode(u8.subarray(10,10+hl))); const blob=new Blob([u8.subarray(10+hl)],{type:'audio/mpeg'});
-      const hasAudio=blob.size>100000;   // 包里带音频就用本地音频；只有原文的包走 TED 在线播放
-      if(wordCount(head.transcript)<120||!head.durationSec||(!hasAudio&&!head.ted)) throw new Error('incomplete');
-      if(hasAudio){ await AudioStore.put(m.id,blob); m.ted=''; m.audioName=f.name; } else { AudioStore.del(m.id); m.ted=head.ted; m.audioName='TED 在线播放'; }
-      m.title=/^TED/i.test(head.title)?head.title:'TED · '+head.title; m.type=head.type||'speech'; m.source=head.ted?'https://www.ted.com/talks/'+head.ted:(head.source||'TED'); m.transcript=head.transcript; m.durationSec=head.durationSec;
-      m.step=2; m.status='active'; m.startedAt=Date.now(); S.sub[m.id]={step:2,phase:'blind'}; P.url=null; P.matId=null; Store.saveMaterial(m,true);
-      toast('导入好了，原文已锁定。先盲听。'); render(); window.scrollTo(0,0);
-    }catch(err){ console.warn(err); st.textContent='这个文件不是素材包，或者没传完整，重新发一次试试'; } };
+  const applyPkg=async(head,blob,fname)=>{ const hasAudio=!!blob&&blob.size>100000;   // 包里带音频就用本地音频；只有原文的包走 TED 在线播放
+    if(!head||wordCount(head.transcript||'')<120) throw new Error('包里的原文不完整');
+    if(!head.durationSec) throw new Error('包里没有时长');
+    if(!hasAudio&&!head.ted) throw new Error('包里既没有音频，也没有 TED 链接');
+    if(hasAudio){ await AudioStore.put(m.id,blob); m.ted=''; m.audioName=fname; } else { AudioStore.del(m.id); m.ted=head.ted; m.audioName='TED 在线播放'; }
+    m.title=/^TED/i.test(head.title)?head.title:'TED · '+head.title; m.type=head.type||'speech'; m.source=head.ted?'https://www.ted.com/talks/'+head.ted:(head.source||'TED'); m.transcript=head.transcript; m.durationSec=head.durationSec;
+    m.step=2; m.status='active'; m.startedAt=Date.now(); S.sub[m.id]={step:2,phase:'blind'}; P.url=null; P.matId=null; Store.saveMaterial(m,true);
+    toast('导入好了，原文已锁定。先盲听。'); render(); window.scrollTo(0,0); };
+  const pkgFail=err=>{ console.warn(err); const st=$('#pkgSt'); if(st) st.textContent='没导入成功：'+((err&&err.message)||'读不出这个文件')+'。把这行字发给 Claude。'; };
+  // 注意：iPhone 上要先把文件读完，再清空选择框，否则文件会读不出来
+  $('#pkgFile').onchange=async e=>{ const inp=e.target; const f=inp.files[0]; if(!f) return; $('#pkgSt').textContent='读取中…';
+    try{ const buf=await f.arrayBuffer(); const r=await parsePackage(buf); await applyPkg(r.head,r.blob,f.name); }catch(err){ pkgFail(err); } finally{ try{ inp.value=''; }catch(_){} } };
+  const pkgFromText=async t=>{ $('#pkgSt').textContent='读取中…'; try{ const r=await parsePackage(String(t||'')); await applyPkg(r.head,null,'素材包'); }catch(err){ pkgFail(err); } };
+  $('#pkgPaste').onclick=async()=>{ try{ const t=await navigator.clipboard.readText(); if(!t||!t.trim()) return toast('剪贴板是空的，先去复制素材包的那段文字'); pkgFromText(t); }catch(e){ $('#pkgText').focus(); toast('这里读不到剪贴板：在下面的小框里长按，选「粘贴」'); } };
+  $('#pkgText').addEventListener('input',e=>{ const v=e.target.value; if(v.indexOf('KENLIAO')>=0&&v.length>200) pkgFromText(v); });
   fetch('./lib/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(j=>{ lib=(j&&j.items)||[]; if(!lib.length) throw 0; renderLib(); }).catch(()=>{ libList.innerHTML='<div class="hint">素材库要联网才能读取，而且只在装到桌面的那个版本里有。现在读不到，可以先用下面的办法自己放音频和原文。</div>'; });
   $('#fAudio').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; save();
     toast('正在读音频时长…'); const url=URL.createObjectURL(f); const a=new Audio(); a.preload='metadata';
