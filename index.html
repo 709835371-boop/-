@@ -151,6 +151,11 @@ details.ted .chip{background:var(--surface);color:var(--soft-ink);max-width:100%
 .tedi{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 11px;display:grid;gap:3px;min-width:0;color:var(--fg)}
 .tedi b{font-family:var(--serif);font-size:14px;line-height:1.35;min-width:0}
 .tedi.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.tedplayer{display:grid;gap:8px;min-width:0}
+.tedframe{position:relative;aspect-ratio:16/9;max-width:100%;border-radius:12px;overflow:hidden;background:#000;border:1px solid var(--line)}
+.tedframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.tedcover{position:absolute;inset:0 0 54px 0;background:var(--soft);color:var(--soft-ink);display:grid;place-items:center;text-align:center;font-size:13.5px;line-height:1.7;pointer-events:none}
+.tedframe.show .tedcover{display:none}
 .libbox{border:1px solid var(--accent);border-radius:10px;padding:12px;background:var(--surface);display:grid;gap:10px;min-width:0}
 .libbox .tedlist{max-height:none}
 .libbox .tedi{background:var(--bg)}
@@ -236,46 +241,39 @@ function buildStructure(transcript){
 }
 /* 听写漏掉的词自动进生词本时，剔除这些虚词 */
 const STOP=new Set('the and for are but not you all any can had her was one our out day get has him his how man new now old see two way who boy did its let put say she too use that with have this will your from they know want been good much some time very when come here just like long make many more only over such take than them well were what about after again also back because before being between both could does each even every first found give going great here into just last little most never next other people same should still their there these they thing think those though three through under upon used using where which while whole with without would year your'.split(/\s+/));
-/* TED 精选库：17–21 分钟档，按话题挑。时长是约数，以 TED 页面为准 */
+/* TED 十篇：按难度从易到难。音频用 TED 官方嵌入播放器在线播放，App 里只存原文 */
 const TED_LIB=[
- {t:'AI',s:'fei_fei_li_how_we_re_teaching_computers_to_understand_pictures',n:'How we\'re teaching computers to understand pictures',p:'Fei-Fei Li',m:18,d:'李飞飞讲 ImageNet：怎么教机器"看懂"图片，AI 入门必听'},
- {t:'AI',s:'jeremy_howard_the_wonderful_and_terrifying_implications_of_computers_that_can_learn',n:'The wonderful and terrifying implications of computers that can learn',p:'Jeremy Howard',m:20,d:'深度学习能做什么、会冲击什么，讲得很平实'},
- {t:'心理',s:'dan_gilbert_the_surprising_science_of_happiness',n:'The surprising science of happiness',p:'Dan Gilbert',m:21,d:'人为什么会"合成"幸福感，语速快、信息密'},
- {t:'心理',s:'daniel_kahneman_the_riddle_of_experience_vs_memory',n:'The riddle of experience vs. memory',p:'Daniel Kahneman',m:20,d:'诺奖得主讲体验自我和记忆自我，句子长、逻辑严'},
- {t:'心理',s:'brene_brown_the_power_of_vulnerability',n:'The power of vulnerability',p:'Brené Brown',m:20,d:'TED 史上最多人看的演讲之一，讲脆弱与联结，口语自然'},
- {t:'心理',s:'susan_cain_the_power_of_introverts',n:'The power of introverts',p:'Susan Cain',m:19,d:'内向者的力量，语速适中，用词干净'},
- {t:'心理',s:'amy_cuddy_your_body_language_may_shape_who_you_are',n:'Your body language may shape who you are',p:'Amy Cuddy',m:21,d:'肢体语言与自信，社科演讲的标准结构'},
- {t:'心理',s:'guy_winch_why_we_all_need_to_practice_emotional_first_aid',n:'Why we all need to practice emotional first aid',p:'Guy Winch',m:17,d:'情绪急救，讲得慢而清楚，适合第一篇'},
- {t:'商业',s:'simon_sinek_how_great_leaders_inspire_action',n:'How great leaders inspire action',p:'Simon Sinek',m:18,d:'黄金圈 Why-How-What，重复多、结构清晰，好背'},
- {t:'商业',s:'dan_pink_the_puzzle_of_motivation',n:'The puzzle of motivation',p:'Dan Pink',m:19,d:'奖金为什么不管用，商业心理学经典'},
- {t:'商业',s:'barry_schwartz_the_paradox_of_choice',n:'The paradox of choice',p:'Barry Schwartz',m:20,d:'选择越多越不满意，讲消费决策'},
- {t:'商业',s:'dan_ariely_are_we_in_control_of_our_own_decisions',n:'Are we in control of our own decisions?',p:'Dan Ariely',m:17,d:'行为经济学，默认选项如何左右人'},
- {t:'商业',s:'malcolm_gladwell_choice_happiness_and_spaghetti_sauce',n:'Choice, happiness and spaghetti sauce',p:'Malcolm Gladwell',m:18,d:'从意面酱讲消费者分群，讲故事高手'},
- {t:'教育',s:'sir_ken_robinson_do_schools_kill_creativity',n:'Do schools kill creativity?',p:'Sir Ken Robinson',m:19,d:'TED 观看量第一，英式幽默，笑点多'},
- {t:'教育',s:'sal_khan_let_s_use_video_to_reinvent_education',n:'Let\'s use video to reinvent education',p:'Sal Khan',m:20,d:'可汗学院创始人讲翻转课堂，和你做的事最近'},
- {t:'人文',s:'chimamanda_ngozi_adichie_the_danger_of_a_single_story',n:'The danger of a single story',p:'Chimamanda Ngozi Adichie',m:19,d:'单一故事的危险，叙事型，语言优美'},
- {t:'人文',s:'david_christian_the_history_of_our_world_in_18_minutes',n:'The history of our world in 18 minutes',p:'David Christian',m:18,d:'18 分钟讲完宇宙史，科普词汇多'},
- {t:'人文',s:'yuval_noah_harari_what_explains_the_rise_of_humans',n:'What explains the rise of humans?',p:'Yuval Noah Harari',m:17,d:'《人类简史》作者，非母语者，吐字清楚'},
- {t:'人文',s:'michael_sandel_the_lost_art_of_democratic_debate',n:'The lost art of democratic debate',p:'Michael Sandel',m:20,d:'哈佛公正课的现场感，有观众互动'},
- {t:'科学',s:'matt_walker_sleep_is_your_superpower',n:'Sleep is your superpower',p:'Matt Walker',m:19,d:'睡眠科学，英音，开头就很抓人'},
- {t:'科学',s:'jill_bolte_taylor_my_stroke_of_insight',n:'My stroke of insight',p:'Jill Bolte Taylor',m:18,d:'脑科学家亲历中风，情绪饱满'},
- {t:'科学',s:'hans_rosling_the_best_stats_you_ve_ever_seen',n:'The best stats you\'ve ever seen',p:'Hans Rosling',m:20,d:'数据可视化之父，做财务的会喜欢'},
- {t:'表达',s:'nancy_duarte_the_secret_structure_of_great_talks',n:'The secret structure of great talks',p:'Nancy Duarte',m:18,d:'好演讲的结构，学完能用在汇报里'},
- {t:'表达',s:'elizabeth_gilbert_your_elusive_creative_genius',n:'Your elusive creative genius',p:'Elizabeth Gilbert',m:19,d:'《美食祈祷恋爱》作者讲创作焦虑，作家的英文'},
+ {s:'guy_winch_why_we_all_need_to_practice_emotional_first_aid',p:'Guy Winch',n:'Why we all need to practice emotional first aid',sec:1034,lv:'易',d:'语速最慢，句子短，日常词汇，全程一个人讲故事'},
+ {s:'yuval_noah_harari_what_explains_the_rise_of_humans',p:'Yuval Noah Harari',n:'What explains the rise of humans?',sec:1018,lv:'易',d:'非母语者，说得慢、咬字清楚，论证一层一层很规整'},
+ {s:'simon_sinek_how_great_leaders_inspire_action',p:'Simon Sinek',n:'How great leaders inspire action',sec:1067,lv:'易',d:'语速中等，同一个句式反复出现，听写和背诵都省力'},
+ {s:'susan_cain_the_power_of_introverts',p:'Susan Cain',n:'The power of introverts',sec:1127,lv:'中',d:'语速中等，发音标准，个别书面词要查'},
+ {s:'fei_fei_li_how_we_re_teaching_computers_to_understand_pictures',p:'Fei-Fei Li',n:'How we\'re teaching computers to understand pictures',sec:1068,lv:'中',d:'说得清楚，但有一批技术名词，略带口音'},
+ {s:'nancy_duarte_the_secret_structure_of_great_talks',p:'Nancy Duarte',n:'The secret structure of great talks',sec:1095,lv:'中',d:'语速中等，中间有几段是对着图讲的'},
+ {s:'barry_schwartz_the_paradox_of_choice',p:'Barry Schwartz',n:'The paradox of choice',sec:1163,lv:'中',d:'语速偏快，不少笑点靠屏幕上的漫画'},
+ {s:'matt_walker_sleep_is_your_superpower',p:'Matt Walker',n:'Sleep is your superpower',sec:1148,lv:'难',d:'英式口音，医学和科研词密，信息量大'},
+ {s:'dan_pink_the_puzzle_of_motivation',p:'Dan Pink',n:'The puzzle of motivation',sec:1116,lv:'难',d:'语速快，排比和反问多，节奏紧'},
+ {s:'sir_ken_robinson_do_schools_kill_creativity',p:'Sir Ken Robinson',n:'Do schools kill creativity?',sec:1151,lv:'难',d:'英式幽默，临场发挥多，观众笑声不断'},
 ];
-const TED_TOPICS=[...new Set(TED_LIB.map(x=>x.t))];
+function tedPlayerHTML(m){ const show=!!(S.sub[m.id]||{}).showVideo;
+  return `<div class="tedplayer" id="tedBox"><div class="tedframe ${show?'show':''}"><iframe src="https://embed.ted.com/talks/${esc(m.ted)}" title="TED 播放器" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe><div class="tedcover"><span>画面已遮住，只听声音<br>点这块正中间开始或暂停</span></div></div>
+    <div class="row" style="justify-content:space-between"><span class="hint grow">在线播放，要联网。进度条和倍速在播放器最下面那一条。<br><a href="https://embed.ted.com/talks/${esc(m.ted)}" target="_blank" rel="noopener">播放器没出来？点这里单独打开只有播放器的页面</a></span><button type="button" class="btn sm" id="tedCover">${show?'遮住画面':'显示画面'}</button></div></div>`; }
 /* TED：从链接取 slug；清洗逐字稿里的时间戳、舞台提示、说话人名 */
 function tedSlug(url){ const m=String(url||'').match(/ted\.com\/talks\/([a-z0-9_]+)/i); return m?m[1]:''; }
 function tedTitle(slug){ const parts=slug.split('_').filter(Boolean); if(parts.length>4) parts.splice(0,2); return parts.map(w=>w[0].toUpperCase()+w.slice(1)).join(' '); }
 /* 整页复制（电脑 Ctrl+A，或手机拖选拖过头）时，裁掉逐字稿前后的网页菜单和页脚：以时间戳行为锚 */
 function trimPageChrome(t){
-  const lines=t.split('\n'); const isTs=l=>/^\s*\d{1,2}:\d{2}(?::\d{2})?(\s|$)/.test(l);
-  const ts=[]; lines.forEach((l,i)=>{ if(isTs(l)) ts.push(i); });
+  let lines=t.split('\n'); const isTs=l=>/^\s*\d{1,2}:\d{2}(?::\d{2})?(\s|$)/.test(l);
+  // TED 逐字稿后面跟着 Footnotes（参考文献）等板块，整段切掉
+  let ts=[]; lines.forEach((l,i)=>{ if(isTs(l)) ts.push(i); });
   if(ts.length<5) return {text:t, cut:0};
+  // TED 逐字稿后面跟着 Footnotes（参考文献）等板块：只在正文开始之后找，整段切掉
+  const endAt=lines.findIndex((l,i)=>i>ts[4]&&/^\s*(Footnotes|Watch next|Related talks|Related topics|About the speaker)\s*$/i.test(l)); if(endAt>0){ lines=lines.slice(0,endAt); ts=ts.filter(i=>i<endAt); }
+  const sent=l=>/[.!?…"”’)\]]$/.test(l) || wordCount(l)>=14;
   let keep=ts[ts.length-1];
-  for(let i=keep+1;i<lines.length;i++){ const l=lines[i].trim(); if(!l) continue;
-    if(/[.!?…"”’)\]]$/.test(l) || wordCount(l)>=14) keep=i; else break; }
-  const out=lines.slice(ts[0],keep+1).join('\n');
+  for(let i=keep+1;i<lines.length;i++){ const l=lines[i].trim(); if(!l) continue; if(sent(l)) keep=i; else break; }
+  // 第一段可能在第一个时间戳前面：往回收成句的段落，碰到菜单字样就停
+  let start=ts[0]; for(let j=start-1;j>=0;j--){ const l=lines[j].trim(); if(!l) continue; if(sent(l)&&wordCount(l)>=5) start=j; else break; }
+  const out=lines.slice(start,keep+1).join('\n');
   return {text:out, cut: wordCount(t)-wordCount(out)};
 }
 function cleanTranscript(text){
@@ -286,6 +284,7 @@ function cleanTranscript(text){
   t=t.replace(/\[\d{1,2}:\d{2}(?::\d{2})?\]/g,'');
   t=t.replace(/\((?:Laughter|Laughs|Applause|Cheers|Cheering|Music|Singing|Video|Audio|Sighs|Gasps|Whistles|Recording|Beat|Pause|Silence|Mock sobs?|Inaudible|Crosstalk|Chuckles|Coughs)[^)]*\)/gi,'');
   t=t.replace(/\[(?:Laughter|Applause|Music|inaudible|crosstalk)[^\]]*\]/gi,'');
+  t=t.replace(/^\s*\[[^\]\n]{1,200}\]\s*$/gm,'');   // 单独成行的 [屏幕上的字幕/标题]
   t=t.replace(/^(?:[A-Z][A-Za-z.'\-]+(?: [A-Z][A-Za-z.'\-]+){0,3}|[A-Z]{1,3}):\s+/gm,''); // 段首人名：
   t=t.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').trim();
   return {text:t, removed: wordCount(before)-wordCount(t), chrome: tp.cut};
@@ -401,6 +400,7 @@ function saveUI(){ Store.lsSet('kl:ui',{view:S.view,curId:S.curId,sub:S.sub}); }
 /* ============ 播放器 ============ */
 const P = { el:$('#player'), matId:null, url:null, A:null, B:null, loop:false, rate:1, onEnded:null, blobMissing:false };
 async function loadAudio(m){
+  if(m.ted){ P.el.pause(); P.blobMissing=false; return false; }   // TED 在线听：不用本地音频
   if(P.matId===m.id && P.url) return true;
   const blob=await AudioStore.get(m.id);
   if(P.url){ URL.revokeObjectURL(P.url); P.url=null; }
@@ -412,6 +412,7 @@ P.el.addEventListener('timeupdate',()=>{ if(P.loop&&P.A!=null&&P.B!=null&&P.el.c
 P.el.addEventListener('ended',()=>{ updatePlayerUI(); if(P.onEnded) P.onEnded(); });
 P.el.addEventListener('play',updatePlayerUI); P.el.addEventListener('pause',updatePlayerUI); P.el.addEventListener('loadedmetadata',updatePlayerUI);
 function playerHTML(opts={}){
+  const cm=S.materials[S.curId]; if(cm&&cm.ted) return tedPlayerHTML(cm);
   const seg=opts.segment? `<div class="seg"><button class="btn sm" data-p="A">A</button><button class="btn sm" data-p="B">B</button><button class="btn sm" data-p="loop">循环</button></div>`:'';
   const back=opts.back!==false? `<button class="btn sm" data-p="-3">‹3s</button><button class="btn sm" data-p="-5">‹5s</button>`:'';
   const speed=opts.speed? `<select class="btn sm" data-p="rate" aria-label="语速"><option value="0.75">0.75×</option><option value="0.85">0.85×</option><option value="1" selected>1.0×</option></select>`:'';
@@ -423,6 +424,7 @@ function playerHTML(opts={}){
   </div>`;
 }
 function bindPlayer(root){
+  const tb=$('#tedBox',root); if(tb){ const btn=$('#tedCover',tb); btn.onclick=()=>{ const on=$('.tedframe',tb).classList.toggle('show'); (S.sub[S.curId]=S.sub[S.curId]||{}).showVideo=on; btn.textContent=on?'遮住画面':'显示画面'; saveUI(); }; return; }
   const box=$('#playerBox',root); if(!box) return;
   if(P.blobMissing){ const h=$('#pHint',box); h.hidden=false; h.innerHTML='这台设备上没有这篇的音频文件。音频只存在选材时用的那台设备里，换了设备要重新选一次同一个文件。 <label class="btn sm" style="display:inline-block">重新选择音频<input type="file" accept="audio/*" id="reAudio" hidden></label>'; $('#reAudio',box).onchange=async e=>{ const f=e.target.files[0]; if(!f) return; await AudioStore.put(P.matId,f); P.url=null; await loadAudio(S.materials[P.matId]); toast('音频已接回'); render(); }; }
   box.addEventListener('click',e=>{
@@ -548,26 +550,23 @@ function stepSelect(m){
   return `<div class="card"><div class="eyebrow">01 选材</div><h2>找一篇你真想听懂的</h2>
     <p class="small muted" style="margin:6px 0 14px">她的标准：感兴趣、20 分钟左右、之前没接触过。新闻、访谈、演讲、纪录片、书都行；文学、诗歌、影视对白不行。最省事的是从下面的素材库里挑一篇，点一下就能开始。</p>
     <div class="stack" style="margin-top:0">
-      <div class="libbox"><div class="row" style="justify-content:space-between"><b>素材库</b><span class="small muted">点一下，音频和原文一起下到手机</span></div>
-        <div class="row" id="libTopics" style="gap:6px"></div>
-        <div class="tedlist" id="libList"><div class="hint">正在读取素材库…</div></div>
-        <div class="hint">都是美国政府出品的公版节目（VOA 专题、NASA 科普播客），原文是官方逐字稿，我逐篇用语音识别核过首尾。下载后自动锁定原文，直接进盲听。</div></div>
-      <div class="libbox" style="border-style:dashed"><div class="row" style="justify-content:space-between"><b>导入 TED 素材包</b><span class="small muted">电脑上打好的 .kenliao 文件</span></div>
-        <div class="row" style="gap:8px"><label class="btn sm primary" style="display:inline-block">选择素材包<input type="file" id="pkgFile" hidden></label><span class="small muted" id="pkgSt"></span></div>
-        <div class="hint">微信里点开收到的文件，右上角「…」选「用其他应用打开」，再选「存储到文件」。然后回这里点「选择素材包」，从「文件」里选它。导入后自动锁定原文，直接进盲听。</div></div>
-      <div class="hint" style="text-align:center">— 或者手动放音频和原文 —</div>
-      <details class="ted" ${m.source&&tedSlug(m.source)?'open':''}><summary>从 TED 自己取一篇（要手动复制逐字稿、下载音频）</summary>
-        <div class="stack" style="margin-top:10px;gap:10px">
-          <div class="small" style="color:var(--soft-ink)">精选 ${TED_LIB.length} 篇 17–21 分钟的演讲，按话题挑一篇；也可以在最下面粘任何 TED 链接。</div>
-          <div class="row" id="tedTopics" style="gap:6px">${['全部'].concat(TED_TOPICS).map((t,i)=>`<button type="button" class="btn sm ${i===0?'on':''}" data-topic="${t}">${t}</button>`).join('')}</div>
-          <div class="tedlist" id="tedList"></div>
-          <input type="text" id="tedUrl" value="${esc(tedSlug(m.source)?m.source:'')}" placeholder="或者粘任何 TED 演讲链接 https://www.ted.com/talks/…" inputmode="url">
-          <div id="tedOut" class="small muted">挑 18 分钟档的演讲，讲话量大约两千五到三千词。</div>
-        </div></details>
+      <div class="libbox"><div class="row" style="justify-content:space-between"><b>TED · 在线听</b><span class="small muted">音频不用下载，在 App 里直接放</span></div>
+        <div class="row" style="gap:8px"><label class="btn sm primary" style="display:inline-block">导入素材包<input type="file" id="pkgFile" hidden></label><span class="small muted" id="pkgSt">电脑上打好的 .kenliao 文件，里面是原文</span></div>
+        <div class="hint">微信里点开收到的文件，右上角「…」选「用其他应用打开」，再选「存储到文件」。回这里点「导入素材包」，从「文件」里选它。导入后原文自动锁定，直接进盲听。</div>
+        <details class="ted" ${m.ted?'open':''}><summary>或者自己选一篇，再把原文粘进来</summary>
+          <div class="stack" style="margin-top:10px;gap:10px">
+            <div class="small" style="color:var(--soft-ink)">十篇按难度从易到难。选好后往下，在「原文」那里粘贴或导入 txt。</div>
+            <div class="tedlist" id="tedList"></div>
+            <div class="row" style="gap:6px;flex-wrap:nowrap"><input type="text" id="tedUrl" class="grow" value="${esc(m.ted&&!TED_LIB.some(x=>x.s===m.ted)?'https://www.ted.com/talks/'+m.ted:'')}" placeholder="别的 TED 演讲链接" inputmode="url"><input type="text" id="tedMin" style="width:64px;flex:none" placeholder="分钟" inputmode="decimal"><button type="button" class="btn sm" id="tedUse" style="flex:none">用这篇</button></div>
+          </div></details></div>
+      <details class="ted" style="border-style:solid;background:var(--surface)"><summary>公版素材库（VOA 慢速专题、NASA 访谈，下载后可离线）</summary>
+        <div class="stack" style="margin-top:10px;gap:10px"><div class="row" id="libTopics" style="gap:6px"></div><div class="tedlist" id="libList"><div class="hint">正在读取素材库…</div></div></div></details>
+      <div class="hint" style="text-align:center">— 手动填写 —</div>
       <label class="f"><span><b>标题</b></span><input type="text" id="fTitle" value="${esc(m.title)}" placeholder="例：TED · Why we sleep"></label>
       <label class="f"><span><b>类型</b></span><select id="fType"><option value="">选一个</option>${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${m.type===k?'selected':''}>${v}</option>`).join('')}</select></label>
       <label class="f"><span><b>来源</b>（可选，网址或节目名）</span><input type="text" id="fSource" value="${esc(m.source)}" placeholder="方便以后找回去"></label>
-      <div class="f"><span class="small muted"><b style="color:var(--fg)">音频文件</b>（mp3 / m4a 等，存在这台设备里）</span>
+      ${m.ted?`<div class="note ok">音频：TED 在线播放 · ${fmtTime(m.durationSec)}，不用选文件。 <button type="button" class="btn sm ghost" id="tedOff">不用 TED 了</button></div>`:''}
+      <div class="f" ${m.ted?'hidden':''}><span class="small muted"><b style="color:var(--fg)">音频文件</b>（mp3 / m4a 等，存在这台设备里）</span>
         <div class="row"><label class="btn sm" style="display:inline-block">${m.audioName?'换一个文件':'选择音频'}<input type="file" accept="audio/*" id="fAudio" hidden></label><span class="small muted grow">${esc(m.audioName||'还没选')}</span></div>
         ${durMsg?`<div class="note ${durCls}">${durMsg}</div>`:''}</div>
       <div class="f" style="display:grid;gap:6px;font-size:13px;color:var(--muted)"><span><b style="color:var(--fg)">原文</b>（逐字稿）<span id="wcHint">${wc?` · 已 ${wc} 词 · 约 ${Math.round(wc/150)} 分钟讲话量`:''}</span></span>
@@ -594,23 +593,15 @@ function bindSelect(m){
   $('#txtFile').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ addText(await f.text(),'已导入并清理'); }catch(err){ toast('这个文件读不出来，要纯文本 txt'); } e.target.value=''; };
   $('#clearBtn').onclick=()=>{ const ta=$('#fText'); if(!ta.value.trim()) return; ta.value=''; wcHint(); save(); edges(); toast('已清空'); };
   edges();
-  // TED 入口
-  const tedUrl=$('#tedUrl'), tedOut=$('#tedOut');
-  const renderTed=()=>{ const slug=tedSlug(tedUrl.value); if(!slug){ tedOut.className='small muted'; tedOut.textContent= tedUrl.value.trim()? '这不像 TED 演讲链接，要形如 ted.com/talks/演讲名' : '挑 18 分钟档的演讲，讲话量大约两千五到三千词。'; return; }
-    const base=`https://www.ted.com/talks/${slug}`; const title=tedTitle(slug);
-    tedOut.className='small'; tedOut.innerHTML=`<div class="stack" style="gap:8px;margin-top:0">
-      <div class="row"><span class="chip">${esc(title)}</span><button type="button" class="btn sm" id="tedFill">填入标题、类型、来源</button></div>
-      <div><b>① 逐字稿</b>：<a href="${base}/transcript?language=en" target="_blank" rel="noopener">打开英文逐字稿页</a>。iPhone 的 Safari 没有「全选」，两种办法：<br>· <b>手机上</b>：长按第一个词选中它，按住选区右下角的小圆点往下拖到屏幕底边不松手，页面会自己滚到底，松手点「拷贝」，回这里点「粘贴」。拖过头选到页脚没关系，会自动裁掉；一次拖不完就分几段，每段粘一次。<br>· <b>电脑上</b>：逐字稿页 Ctrl+A、Ctrl+C，发到微信「文件传输助手」（太长发不出就存成 txt 文件发），手机上长按那条消息「复制」，回这里点「粘贴」；txt 文件就点「导入 txt」。</div>
-      <div><b>② 音频</b>：打开 <a href="${base}" target="_blank" rel="noopener">演讲页</a>，点「Share / 分享」里的「Download / 下载」，选 Audio（mp3）。手机 Safari 会把它存进「文件」App 的「下载」文件夹，回到这里点「选择音频」从「文件」里选它。用电脑下再传到手机也行。TED 应用内的下载不是文件，用不了。</div>
-      <div class="muted">TED 不允许软件自动抓取，所以这两步要你自己点一下。</div></div>`;
-    $('#tedFill').onclick=()=>{ if(!$('#fTitle').value.trim()) $('#fTitle').value='TED · '+title; $('#fType').value='speech'; $('#fSource').value=base; save(); toast('已填好标题、类型、来源'); }; };
-  tedUrl.addEventListener('input',renderTed); tedUrl.addEventListener('change',()=>{ const slug=tedSlug(tedUrl.value); if(slug&&!$('#fSource').value.trim()){ $('#fSource').value=`https://www.ted.com/talks/${slug}`; save(); } }); renderTed();
-  // 精选库
-  let topic='全部'; const list=$('#tedList');
-  const renderList=()=>{ const cur=tedSlug(tedUrl.value); list.innerHTML=TED_LIB.filter(x=>topic==='全部'||x.t===topic).map(x=>`<button type="button" class="tedi ${x.s===cur?'on':''}" data-slug="${x.s}"><span class="row" style="justify-content:space-between;gap:6px"><b>${esc(x.n)}</b><span class="num small muted" style="flex:none">约 ${x.m} 分</span></span><span class="small muted">${esc(x.p)} · ${esc(x.t)}</span><span class="small">${esc(x.d)}</span></button>`).join('');
-    list.querySelectorAll('[data-slug]').forEach(b=>b.onclick=()=>{ const x=TED_LIB.find(y=>y.s===b.dataset.slug); tedUrl.value=`https://www.ted.com/talks/${x.s}`; renderTed(); $('#fTitle').value='TED · '+x.n; $('#fType').value='speech'; $('#fSource').value=tedUrl.value; save(); renderList(); toast('已选《'+x.n+'》，下一步去拿逐字稿'); $('#tedOut').scrollIntoView({behavior:'smooth',block:'center'}); }); };
-  $('#tedTopics').querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>{ topic=b.dataset.topic; $('#tedTopics').querySelectorAll('[data-topic]').forEach(c=>c.classList.toggle('on',c===b)); renderList(); });
-  renderList();
+  // TED 在线听：选一篇（或粘链接+分钟数），音频用 TED 官方嵌入播放器，只需要把原文放进来
+  const tedUrl=$('#tedUrl'), list=$('#tedList');
+  const setTed=(slug,x,sec)=>{ save(); m.ted=slug; m.type='speech'; m.source='https://www.ted.com/talks/'+slug; m.audioName='TED 在线播放';
+    if(x){ m.title='TED · '+x.p+' · '+x.n; m.durationSec=x.sec; } else { m.title=m.title||('TED · '+tedTitle(slug)); m.durationSec=sec; }
+    AudioStore.del(m.id); P.url=null; P.matId=null; Store.saveMaterial(m,true); render(); toast('已选好。下一步把原文放进来'); };
+  list.innerHTML=TED_LIB.map((x,i)=>`<button type="button" class="tedi ${m.ted===x.s?'on':''}" data-slug="${x.s}"><span class="row" style="justify-content:space-between;gap:6px"><b>${String(i+1).padStart(2,'0')} · ${esc(x.p)}</b><span class="chip ${x.lv==='易'?'ok':x.lv==='难'?'bad':'warn'}" style="flex:none">${x.lv} · ${Math.round(x.sec/60)} 分</span></span><span class="small">${esc(x.n)}</span><span class="small muted">${esc(x.d)}</span></button>`).join('');
+  list.querySelectorAll('[data-slug]').forEach(b=>b.onclick=()=>{ const x=TED_LIB.find(y=>y.s===b.dataset.slug); setTed(x.s,x); });
+  $('#tedUse').onclick=()=>{ const slug=tedSlug(tedUrl.value); const min=parseFloat($('#tedMin').value); if(!slug) return toast('这不像 TED 演讲链接，要形如 ted.com/talks/演讲名'); if(!(min>=5&&min<=45)) return toast('填一下这篇演讲多少分钟'); setTed(slug,null,Math.round(min*60)); };
+  const tedOff=$('#tedOff'); if(tedOff) tedOff.onclick=()=>{ save(); m.ted=''; m.audioName=''; m.durationSec=0; Store.saveMaterial(m,true); render(); };
   // 素材库：一键下载音频 + 原文，下完自动锁定原文、进盲听
   const libList=$('#libList'), libTopics=$('#libTopics'); let lib=null, libTopic='全部', busy=false;
   const usedLib=new Set(Object.values(S.materials).filter(x=>x.libId&&x.id!==m.id).map(x=>x.libId));
@@ -639,9 +630,10 @@ function bindSelect(m){
     try{ const buf=await f.arrayBuffer(); const u8=new Uint8Array(buf); const td=new TextDecoder();
       if(td.decode(u8.subarray(0,6))!=='KLPK1\n') throw new Error('not a package');
       const hl=new DataView(buf).getUint32(6,true); const head=JSON.parse(td.decode(u8.subarray(10,10+hl))); const blob=new Blob([u8.subarray(10+hl)],{type:'audio/mpeg'});
-      if(blob.size<100000||wordCount(head.transcript)<120||!head.durationSec) throw new Error('incomplete');
-      await AudioStore.put(m.id,blob);
-      m.title=/^TED/i.test(head.title)?head.title:'TED · '+head.title; m.type=head.type||'speech'; m.source=head.source||'TED'; m.transcript=head.transcript; m.audioName=f.name; m.durationSec=head.durationSec;
+      const hasAudio=blob.size>100000;   // 包里带音频就用本地音频；只有原文的包走 TED 在线播放
+      if(wordCount(head.transcript)<120||!head.durationSec||(!hasAudio&&!head.ted)) throw new Error('incomplete');
+      if(hasAudio){ await AudioStore.put(m.id,blob); m.ted=''; m.audioName=f.name; } else { AudioStore.del(m.id); m.ted=head.ted; m.audioName='TED 在线播放'; }
+      m.title=/^TED/i.test(head.title)?head.title:'TED · '+head.title; m.type=head.type||'speech'; m.source=head.ted?'https://www.ted.com/talks/'+head.ted:(head.source||'TED'); m.transcript=head.transcript; m.durationSec=head.durationSec;
       m.step=2; m.status='active'; m.startedAt=Date.now(); S.sub[m.id]={step:2,phase:'blind'}; P.url=null; P.matId=null; Store.saveMaterial(m,true);
       toast('导入好了，原文已锁定。先盲听。'); render(); window.scrollTo(0,0);
     }catch(err){ console.warn(err); st.textContent='这个文件不是素材包，或者没传完整，重新发一次试试'; } };
@@ -651,12 +643,12 @@ function bindSelect(m){
     const dur=await new Promise(res=>{ a.onloadedmetadata=()=>res(a.duration); a.onerror=()=>res(0); a.src=url; setTimeout(()=>res(a.duration||0),8000); });
     URL.revokeObjectURL(url);
     if(!dur||!isFinite(dur)){ toast('读不出这个文件的时长，换个 mp3 试试'); return; }
-    await AudioStore.put(m.id,f); m.audioName=f.name; m.durationSec=Math.round(dur); P.url=null; P.matId=null; Store.saveMaterial(m,true); render(); };
+    await AudioStore.put(m.id,f); m.ted=''; m.audioName=f.name; m.durationSec=Math.round(dur); P.url=null; P.matId=null; Store.saveMaterial(m,true); render(); };
   $('#startBtn').onclick=()=>{ save();
     const wc=wordCount(m.transcript); const min=m.durationSec/60;
     if(!m.title) return toast('先起个标题');
     if(!m.type) return toast('选一下类型');
-    if(!m.durationSec) return toast('还没选音频文件');
+    if(!m.durationSec) return toast('还没选音频：在上面选一篇 TED，或者选一个音频文件');
     if(min<10) return toast('这条不到 10 分钟，太短，换一条 20 分钟左右的');
     if(min>40) return toast('这条超过 40 分钟，一个月啃不完，换一条');
     if(wc<120) return toast('原文太短或还没粘，逐字稿要先放进来才能锁');
@@ -672,14 +664,14 @@ function stepDictation(m){
   let body='';
   if(phase==='blind'){
     body=`<div class="eyebrow">02 听写 · 盲听</div><h2>先整篇听几遍，熟悉上下文</h2>
-      <p class="small muted" style="margin:6px 0 12px">什么都别看，就听。不懂的地方放过去，先知道这篇大概在讲什么。整篇放完会自动记一遍，至少两遍再开始逐句听写。</p>
+      <p class="small muted" style="margin:6px 0 12px">什么都别看，就听。不懂的地方放过去，先知道这篇大概在讲什么。${m.ted?'每听完整篇，点一下「手动记一遍」':'整篇放完会自动记一遍'}，至少两遍再开始逐句听写。</p>
       ${playerHTML({back:false})}
       <div class="row" style="justify-content:space-between;margin-top:14px"><div><div class="eyebrow">已盲听</div><div class="big">${m.blind.passes}<span style="font-size:16px;color:var(--muted)"> 遍</span></div></div>
         <div class="row"><button class="btn sm" id="passPlus">手动记一遍</button><button class="btn primary" id="toWrite" ${canWrite?'':'disabled'}>开始逐句听写</button></div></div>
       <div class="note" style="margin-top:12px"><span class="chip lock">🔒 原文已锁定</span>&nbsp; 核对前看不到原文，这是方法的核心，不是软件的限制。</div>`;
   } else if(phase==='write'){
     body=`<div class="eyebrow">02 听写 · 逐句</div><h2>一句一句，逐字写下来</h2>
-      <p class="small muted" style="margin:6px 0 12px">A、B 两点圈住一句反复放，退 3 秒 5 秒都在。先不管对错，听到什么写什么。实在听不出再查词典、联系上下文猜，写到大约七成再去核对。</p>
+      <p class="small muted" style="margin:6px 0 12px">${m.ted?'听一句暂停一下，没听清就把播放器的进度条往回拖一点再听。':'A、B 两点圈住一句反复放，退 3 秒 5 秒都在。'}先不管对错，听到什么写什么。实在听不出再查词典、联系上下文猜，写到大约七成再去核对。</p>
       ${playerHTML({segment:true,speed:true})}
       <div class="row" style="margin-top:12px;justify-content:space-between"><span class="small muted num">已写 ${wcD} 词 · 原文约 ${wcT} 词 · ${(ratio*100).toFixed(0)}%</span><span class="small muted">自动保存</span></div>
       <textarea class="paper" id="dictTa" placeholder="从第一句开始…" spellcheck="false">${esc(m.dict.text)}</textarea>
