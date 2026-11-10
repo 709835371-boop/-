@@ -144,7 +144,9 @@ details summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:14p
 details.ted{border:1px dashed var(--accent);border-radius:10px;padding:10px 12px;background:var(--soft)}
 details.ted summary{color:var(--soft-ink)}
 details.ted input{background:var(--surface)}
-details.ted .chip{background:var(--surface);color:var(--soft-ink);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+details.ted .chip{background:var(--surface);color:var(--soft-ink);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;min-width:0;flex:0 1 auto}
+.stack>*,details.ted,details.ted .stack,details.ted .row{min-width:0}
+#tedOut{min-width:0;overflow-wrap:anywhere}
 .tedlist{display:grid;gap:6px;max-height:340px;overflow-y:auto;padding-right:2px}
 .tedi{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 11px;display:grid;gap:3px;min-width:0;color:var(--fg)}
 .tedi b{font-family:var(--serif);font-size:14px;line-height:1.35;min-width:0}
@@ -260,8 +262,20 @@ const TED_TOPICS=[...new Set(TED_LIB.map(x=>x.t))];
 /* TED：从链接取 slug；清洗逐字稿里的时间戳、舞台提示、说话人名 */
 function tedSlug(url){ const m=String(url||'').match(/ted\.com\/talks\/([a-z0-9_]+)/i); return m?m[1]:''; }
 function tedTitle(slug){ const parts=slug.split('_').filter(Boolean); if(parts.length>4) parts.splice(0,2); return parts.map(w=>w[0].toUpperCase()+w.slice(1)).join(' '); }
+/* 整页复制（电脑 Ctrl+A，或手机拖选拖过头）时，裁掉逐字稿前后的网页菜单和页脚：以时间戳行为锚 */
+function trimPageChrome(t){
+  const lines=t.split('\n'); const isTs=l=>/^\s*\d{1,2}:\d{2}(?::\d{2})?(\s|$)/.test(l);
+  const ts=[]; lines.forEach((l,i)=>{ if(isTs(l)) ts.push(i); });
+  if(ts.length<5) return {text:t, cut:0};
+  let keep=ts[ts.length-1];
+  for(let i=keep+1;i<lines.length;i++){ const l=lines[i].trim(); if(!l) continue;
+    if(/[.!?…"”’)\]]$/.test(l) || wordCount(l)>=14) keep=i; else break; }
+  const out=lines.slice(ts[0],keep+1).join('\n');
+  return {text:out, cut: wordCount(t)-wordCount(out)};
+}
 function cleanTranscript(text){
-  let t=String(text||'').replace(/\r/g,''); const before=t;
+  let t=String(text||'').replace(/\r/g,'').replace(/ /g,' '); const before=t;
+  const tp=trimPageChrome(t); t=tp.text;
   t=t.replace(/^\s*\d{1,2}:\d{2}(?::\d{2})?\s*$/gm,'');                 // 单独成行的时间戳
   t=t.replace(/^\s*\d{1,2}:\d{2}(?::\d{2})?\s+/gm,'');                  // 行首时间戳
   t=t.replace(/\[\d{1,2}:\d{2}(?::\d{2})?\]/g,'');
@@ -269,7 +283,7 @@ function cleanTranscript(text){
   t=t.replace(/\[(?:Laughter|Applause|Music|inaudible|crosstalk)[^\]]*\]/gi,'');
   t=t.replace(/^(?:[A-Z][A-Za-z.'\-]+(?: [A-Z][A-Za-z.'\-]+){0,3}|[A-Z]{1,3}):\s+/gm,''); // 段首人名：
   t=t.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').replace(/[ \t]{2,}/g,' ').trim();
-  return {text:t, removed: wordCount(before)-wordCount(t)};
+  return {text:t, removed: wordCount(before)-wordCount(t), chrome: tp.cut};
 }
 function firstLetters(s){ return s.replace(/[A-Za-zÀ-ɏ']+/g, w=>w[0]+'_'.repeat(Math.max(1,Math.min(w.length-1,6)))); }
 
@@ -543,7 +557,9 @@ function stepSelect(m){
       <div class="f"><span class="small muted"><b style="color:var(--fg)">音频文件</b>（mp3 / m4a 等，存在这台设备里）</span>
         <div class="row"><label class="btn sm" style="display:inline-block">${m.audioName?'换一个文件':'选择音频'}<input type="file" accept="audio/*" id="fAudio" hidden></label><span class="small muted grow">${esc(m.audioName||'还没选')}</span></div>
         ${durMsg?`<div class="note ${durCls}">${durMsg}</div>`:''}</div>
-      <label class="f"><span class="row" style="justify-content:space-between"><span><b>原文</b>（逐字稿）<span id="wcHint">${wc?` · 已 ${wc} 词 · 约 ${Math.round(wc/150)} 分钟讲话量`:''}</span></span><button type="button" class="btn sm" id="cleanBtn">清理格式</button></span><textarea id="fText" placeholder="粘贴整篇原文。时间戳、(Laughter)、说话人名字不用手删，点「清理格式」。">${esc(m.transcript)}</textarea></label>
+      <div class="f" style="display:grid;gap:6px;font-size:13px;color:var(--muted)"><span><b style="color:var(--fg)">原文</b>（逐字稿）<span id="wcHint">${wc?` · 已 ${wc} 词 · 约 ${Math.round(wc/150)} 分钟讲话量`:''}</span></span>
+        <div class="row" style="gap:6px"><button type="button" class="btn sm primary" id="pasteBtn">粘贴</button><label class="btn sm" style="display:inline-block">导入 txt<input type="file" accept=".txt,text/plain" id="txtFile" hidden></label><button type="button" class="btn sm" id="cleanBtn">清理格式</button><button type="button" class="btn sm ghost" id="clearBtn">清空</button></div>
+        <textarea id="fText" aria-label="原文" placeholder="复制好逐字稿后点上面的「粘贴」。可以分几段复制，每点一次接在后面。时间戳、(Laughter)、人名、网页菜单会自动清掉。">${esc(m.transcript)}</textarea><div class="hint" id="edgeHint"></div></div>
       <div class="note">保存后原文立刻锁定。接下来几周你只和耳朵打交道，直到听写核对过七成。</div>
       <button class="btn primary block" id="startBtn">锁定原文，开始啃这篇</button>
       <button class="btn sm ghost danger" id="delAsk">不要这篇了</button><div class="inline-confirm" id="delConfirm" hidden><span>删掉这篇草稿？</span><button class="btn sm danger" id="delGo">删除</button><button class="btn sm" id="delNo">算了</button></div>
@@ -556,14 +572,22 @@ function bindSelect(m){
   ['#fTitle','#fType','#fSource','#fText'].forEach(s=>{ const el=$(s); el.addEventListener('change',save); el.addEventListener('blur',save); });
   const wcHint=()=>{ const n=wordCount($('#fText').value); $('#wcHint').textContent= n?` · 已 ${n} 词 · 约 ${Math.round(n/150)} 分钟讲话量`:''; };
   $('#fText').addEventListener('input',wcHint);
-  $('#cleanBtn').onclick=()=>{ const ta=$('#fText'); const r=cleanTranscript(ta.value); ta.value=r.text; wcHint(); save(); toast(r.removed>0?`清掉了 ${r.removed} 个词的时间戳 / 提示 / 人名`:'没发现要清的东西'); };
+  const edges=()=>{ const ws=$('#fText').value.trim().split(/\s+/).filter(Boolean); const el=$('#edgeHint'); if(ws.length<30){ el.textContent=''; return; } el.innerHTML='开头：<b>'+esc(ws.slice(0,9).join(' '))+'</b> …<br>结尾：… <b>'+esc(ws.slice(-9).join(' '))+'</b><br>开头结尾要是混进了网页上的菜单字样，在框里删掉。'; };
+  const cleanNow=(quiet)=>{ const ta=$('#fText'); const r=cleanTranscript(ta.value); ta.value=r.text; wcHint(); save(); edges(); if(!quiet) toast(r.removed>0?`清掉了 ${r.removed} 个词${r.chrome>0?'（含网页页头页尾）':'的时间戳 / 提示 / 人名'}`:'没发现要清的东西'); return r; };
+  $('#cleanBtn').onclick=()=>cleanNow(false);
+  const addText=(t,how)=>{ const ta=$('#fText'); if(!t||!t.trim()) return toast('内容是空的'); const had=ta.value.trim(); const piece=cleanTranscript(t).text; if(!piece) return toast('清理后没剩下内容，看看复制的是不是逐字稿'); if(had&&piece.length>80&&had.includes(piece.slice(0,80))) return toast('这一段已经在里面了，没有重复添加'); ta.value= had? had+'\n\n'+piece : piece; cleanNow(true); toast((had?'已接在后面，':how+'，')+'现在共 '+wordCount(ta.value)+' 词'); };
+  $('#pasteBtn').onclick=async()=>{ try{ const t=await navigator.clipboard.readText(); if(!t||!t.trim()) return toast('剪贴板是空的，先去复制逐字稿'); addText(t,'已粘贴并清理'); }catch(e){ $('#fText').focus(); toast('这里读不到剪贴板：在下面的框里长按，选「粘贴」'); } };
+  $('#fText').addEventListener('paste',()=>setTimeout(()=>{ if(wordCount($('#fText').value)>100) cleanNow(true); },60));
+  $('#txtFile').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; try{ addText(await f.text(),'已导入并清理'); }catch(err){ toast('这个文件读不出来，要纯文本 txt'); } e.target.value=''; };
+  $('#clearBtn').onclick=()=>{ const ta=$('#fText'); if(!ta.value.trim()) return; ta.value=''; wcHint(); save(); edges(); toast('已清空'); };
+  edges();
   // TED 入口
   const tedUrl=$('#tedUrl'), tedOut=$('#tedOut');
   const renderTed=()=>{ const slug=tedSlug(tedUrl.value); if(!slug){ tedOut.className='small muted'; tedOut.textContent= tedUrl.value.trim()? '这不像 TED 演讲链接，要形如 ted.com/talks/演讲名' : '挑 18 分钟档的演讲，讲话量大约两千五到三千词。'; return; }
     const base=`https://www.ted.com/talks/${slug}`; const title=tedTitle(slug);
     tedOut.className='small'; tedOut.innerHTML=`<div class="stack" style="gap:8px;margin-top:0">
       <div class="row"><span class="chip">${esc(title)}</span><button type="button" class="btn sm" id="tedFill">填入标题、类型、来源</button></div>
-      <div><b>① 逐字稿</b>：<a href="${base}/transcript?language=en" target="_blank" rel="noopener">打开英文逐字稿页</a>，全选复制，粘到下面「原文」里，点「清理格式」。</div>
+      <div><b>① 逐字稿</b>：<a href="${base}/transcript?language=en" target="_blank" rel="noopener">打开英文逐字稿页</a>。iPhone 的 Safari 没有「全选」，两种办法：<br>· <b>手机上</b>：长按第一个词选中它，按住选区右下角的小圆点往下拖到屏幕底边不松手，页面会自己滚到底，松手点「拷贝」，回这里点「粘贴」。拖过头选到页脚没关系，会自动裁掉；一次拖不完就分几段，每段粘一次。<br>· <b>电脑上</b>：逐字稿页 Ctrl+A、Ctrl+C，发到微信「文件传输助手」（太长发不出就存成 txt 文件发），手机上长按那条消息「复制」，回这里点「粘贴」；txt 文件就点「导入 txt」。</div>
       <div><b>② 音频</b>：打开 <a href="${base}" target="_blank" rel="noopener">演讲页</a>，点「Share / 分享」里的「Download / 下载」，选 Audio（mp3）。手机 Safari 会把它存进「文件」App 的「下载」文件夹，回到这里点「选择音频」从「文件」里选它。用电脑下再传到手机也行。TED 应用内的下载不是文件，用不了。</div>
       <div class="muted">TED 不允许软件自动抓取，所以这两步要你自己点一下。</div></div>`;
     $('#tedFill').onclick=()=>{ if(!$('#fTitle').value.trim()) $('#fTitle').value='TED · '+title; $('#fType').value='speech'; $('#fSource').value=base; save(); toast('已填好标题、类型、来源'); }; };
