@@ -1,0 +1,273 @@
+This is NASA’s Curious Universe. I’m Jacob Pinter.
+
+NASA is launching a new space telescope that will change the way we see the universe.
+
+It’s called the Nancy Grace Roman Space Telescope.
+
+Roman will study some of the biggest mysteries out there.
+
+Answering questions about how the universe has changed over time … what’s driving its expansion … and the worlds that exist beyond our solar system.
+
+Roman has a unique ability to survey vast areas of space with incredible speed and detail.
+
+It will collect huge amounts of data, including more than a billion galaxies … and help discover thousands of planets orbiting distant stars.
+
+Roman will join other space telescopes … including Hubble and Webb.
+
+It builds on NASA’s technology and know-how that have shaped our view of the cosmos for decades.
+
+In this episode … how Roman will discover and study new worlds outside of our solar system… exoplanets.
+
+We’ll learn how Roman will conduct a galactic census… staring into the center of our Milky Way galaxy and adding as many as 100,000 new exoplanets to our catalog of known worlds.
+
+With each new exoplanet detection, we’ll learn a little more about how planets form… and how our own solar system came to be.
+
+We’ll also peek inside an experimental instrument flying aboard this space telescope… which will let scientists zoom in on Jupiter-sized exoplanets in detail for the very first time.
+
+All that will pave the way for a new era of exoplanet science … and get us a few steps closer to eventually finding small, rocky exoplanets like our own. Exo-Earths.
+
+If you look up on a clear night, in a place without much light pollution, you can typically see a couple thousand stars.
+
+We now know that on average, each one of those stars has at least one exoplanet orbiting it.
+
+So far, we’ve detected more than 6,000 of them.
+
+And we’ve learned that exoplanets and planetary systems come in a wide variety of shapes and sizes.
+
+We can still only guess at what those exoplanets are like… but our best guesses would make the most creative sci-fi authors blush.
+
+We’ve discovered planets where it rains glass… planets entirely covered by lava oceans… planets with… and I know this sounds like an oxymoron… hot ice.
+
+Now, this is a brand-new field. We’re still at the very beginning… coming up with new methods and technologies to detect exoplanets and learn the most basic things about them.
+
+In fact, about 30 years ago we didn’t know for sure if exoplanets even existed.
+
+And right there at the start was a young French scientist named Bertrand Mennesson.
+
+when I was 23 I went to an internship fair. There were a number of topics. One that was very futuristic at the time was about exoplanets.
+
+Today, Bertrand is the Deputy Project Scientist for the Roman Space Telescope at NASA’s Jet Propulsion Laboratory… he’s one of the people leading Roman’s exoplanet science.
+
+But at that internship fair, 30 years ago, exoplanet science barely existed… it was a totally theoretical field.
+
+Nobody had ever detected an exoplanet yet found what its atmosphere was made of, but I thought it was a really interesting topic, so a bit of a bet involved in getting into a field where there’s been no detection yet, but it captured my imagination, I think.
+
+That bet on a new field paid off. In 1995, while Bertrand was in graduate school, it happened.
+
+Two Swiss scientists discovered the first exoplanet.
+
+One of the reviewers for the original paper was a guy that worked with us, and so he told us, “Don’t tell this to anyone else, but we might have detected the first exoplanet.” And the rest is history.
+
+That planet was 51 Peg B … nicknamed “Dimidium.”
+
+The researchers found it by looking at the planet’s parent star and noticing that it wobbled a little bit…
+
+Basically, if a planet is orbiting a star, the star is going to react to that motion by wobbling itself either along the line of sight or perpendicular to the line of sight.
+
+Years later, those two scientists would win the Nobel Prize in Physics for that discovery.
+
+It was very exciting, because nobody expected this type of planet. What you kind of discover first are what we would call the freaks of nature.
+
+Now, 51 Peg B is definitely a freak. For one thing, it’s huge… a gas giant bigger than Jupiter. And it orbits way closer to its star than Jupiter does in our own solar system.
+
+That made scientists go, “huh.”
+
+Maybe we have to rethink what we think we know about how planetary systems work.
+
+So the very first exoplanets that were discovered were totally unlike anything in our own solar system. They were Jupiter-sized things in orbits tighter than Mercury’s, and right away you know that the planet formation model that produced our solar system is not the only type of planet formation that happens in our galaxy.
+
+In other words…
+
+Our solar system is not the universal blueprint.
+
+That’s Vanessa Bailey. She’s an instrument scientist on the Roman telescope team.
+
+She says, picture that map that shows the planets in our solar system in a line out from the Sun…
+
+You know… Mercury, Venus, Earth, Mars… then the big gas giants, Jupiter, Saturn, Uranus, Neptune… and maybe Pluto… depending on when you went to school.
+
+I grew up with, and, you did too, with, with this idea that, okay, all of the small rocky planets are in the interior of the planetary system. All the big giant planets are on the exterior, and astronomers had built up, and planetary scientists had built up a model for how you can form a planetary system to produce rocky planets on the inside and big gas giants on the outside.
+
+Exoplanetary systems that we’ve discovered are just… not like that. They have those giants like 51 Peg B… and even stranger things.
+
+So, we’ve seen many of these hot Jupiters, we’ve discovered these things called super Earths, or mini Neptunes, totally unlike anything in our own solar system. And as the name kind of implies, we don’t know, are they scaled-up rocky planets, like a bigger version of Earth, are they super Earths? Or are they scaled-down versions of Neptune with a big hydrogen atmosphere? Mini Neptunes? These are known to be now, in fact, some of the most common type of planets in exoplanetary systems. So, you know, we see just an incredibly diverse array of exoplanets everywhere we look, there’s, there’s something new and interesting.
+
+Scientists think the reason we keep finding these weirdos comes down to the ways we’re looking.
+
+There’s that wobble method…
+
+and then another method, where astronomers carefully measure the brightness of stars.
+
+When a star’s brightness dips a little, that’s a sign that an orbiting planet might be passing in front of it.
+
+Vanessa says both of these methods…
+
+It turns out they’re the best at detecting very large planets orbiting very close to their stars.
+
+With both of these methods, you’re looking at a star and inferring things about the planets that orbit it.
+
+Unlike planetary science in our own solar system, where we can send a rover or send a probe, the only tools we have touse as astronomers studying exoplanets are light.
+
+Scientists call these techniques “indirect methods.”
+
+Both of these use the look for a signature in the way a planet can affect the light of the star, you don’t see the planet itself, but you see the way it changes the light of the star, and you can infer that a planet is there, and that’s how the vast, vast majority of the more than 6,000 confirmed exoplanets have been discovered, is through one of these indirect methods.
+
+But since they’re biased towards a certain type of planet, we know our picture of the universe is incomplete.
+
+What we don’t know yet is how common are solar systems like ours, and that’s simply because planets like ours are very hard to detect.
+
+To really understand the scope of possible planetary systems… and to understand how our solar system formed and why it has the planets it does… we need methods that can find smaller planets much further out from their stars.
+
+Like, the distance Earth is away from our Sun.
+
+And we need to find a lot more than 6,000 of them.
+
+That’s where Roman comes in.
+
+Roman’s main instrument is the Wide Field Instrument.
+
+It’s a 300-megapixel camera with a field of view 100 times bigger than Hubble’s. And Roman will use that instrument to look for exoplanets up to 26,000 lightyears away from Earth.
+
+Roman will look for signs of big exoplanets transiting close in front of their stars.
+
+But it’ll also use a newer method for detecting exoplanets: gravitational microlensing.
+
+This one’s a little complicated… but basically it uses stars as magnifying glasses…
+
+The huge gravity of some stars stretches spacetime, making it easier to spot exoplanets orbiting far from their stars.
+
+This doesn’t happen everywhere, but since Roman can see so much of the sky at once, it’ll be able to spot the places where it doeshappen.
+
+And I’m quite excited, because the Nancy Grace Roman mission, one of the two cameras on board the Wide Field instrument, will use the microlensing method to get the most complete census to date of smaller planets orbiting at distances more like Earth, Mars, Jupiter, a real part of parameter space we’ve never been able to access before, and that’s what’s going to tell us, is our solar system common or rare, at least go a long way to answering that question.
+
+This new method compliments the older ones well.
+
+The transit method is best at discovering planets orbiting close to their stars, whereas the microlensing method is better at discovering planets orbiting farther from their stars.
+
+Once Roman launches, the science team is going to turn the Wide Field Instrument towards the core of the Milky Way galaxy and scan for exoplanets.
+
+The wide field instrument is going to stare towards the center of our galaxy, where it can see literally hundreds of thousands of stars in a single image at once, and it can use one of these two indirect detection methods, the transit method or the microlensing method, to search for planets around hundreds of thousands of stars at once. We know that most stars have planets, and so it’s probably no surprise then that that with these surveys, the Wide Field Instrument will detect perhaps 100,000 planets.
+
+That’s more than 16 times as many exoplanets as we know about today.
+
+This project has a cool name… the galactic bulge time domain survey.
+
+It’s like a galactic census. From this, we’ll get a fuller picture of the demographics of planets in our galaxy… and a better understanding of how common our solar system is.
+
+But for a given patch of sky with exoplanets…
+
+We’re going to see them once and we’re going to be able to tell how far they are from their star and what their mass is, but we’re not going to be able to have a lot of details on them or observe them ever again.
+
+That’s Bertrand again.
+
+He says, that means from Roman’s Wide Field Instrument, we’ll learn more about how our solar system formed, and how planetary systems form in general.
+
+But we won’t get much insight from those methods into the other big question in exoplanet science, the one that drives him… could other planets support life?
+
+so this is not really looking for aliens, which I will talk to my son and nephews about, because they are less than 10 years old, but you know, eventually this is what we are after the search for, for life in the universe like trying to answer these basic questions by actually observing stars and whether they have planets, whether these planets are habitable, whether these habitable planets have life, what kind of life.
+
+The biggest quest in exoplanet science is discovering an exo-Earth… a small, rocky planet like ours, that could potentially support life.
+
+To learn about these exoplanets in detail, to figure out what their atmospheres are made of, whether they have oceans of liquid water, whether they could host life… you need to zoom in and take a long, close look.
+
+Roman is advancing key technologies that may someday let us do just that.
+
+For a planet to potentially host life, it has to be in a star’s habitable zone.
+
+We sometimes call that the goldilocks zone… too close to a star, and the planet gets bombarded with radiation.
+
+Too far away, and it’s too cold for liquid water to exist.
+
+The planet’s orbit has to be juuuuust right.
+
+But being in the goldilocks zone isn’t a guarantee that a planet is a pleasant place to visit.
+
+Earth and Venus are both within our Sun’s goldilocks zone.
+
+But one has surface temperatures of almost 900 degrees Fahrenheit… and atmospheric pressure that’s crushed every probe we’ve sent so far. And one is, well, Earth.
+
+That’s because Venus’ atmosphere is almost entirely carbon dioxide. Earth’s has oxygen… which life as we know it needs to exist.
+
+So, to really know if a planet is habitable, you need to know what its atmosphere is made of.
+
+And you can’t do that with the indirect methods we’ve been talking about so far.
+
+That’s where the newest, most cutting-edge exoplanet research method comes in… taking pictures of planets directly.
+
+It’s really you see directly the planet itself and its light, so you’re able to analyze the light of the planet and not merely saying that there’s probably a planet in orbit around that star, because you see the star move. In that case, you really see the planet itself.
+
+What you’re seeing is either light the planet is reflecting from its star…
+
+Or light the planet’s emitting itself, if it’s so young that it’s still glowing from the heat of its formation.
+
+Now, the pictures we’re talking about taking… they are not beautiful, clear photos.
+
+Yeah, where maybe some people have in mind that we are taking sharp images where you can see the cloud bands like you could see on Jupiter. It’s nothing like that, right? These systems are light years away. So, we are getting one little smudge, we’lltake an image in several different colors of light, study the relative brightness in those different colors to try to tease out what the atmosphere might be made of.
+
+But from that tiny smudge… that pinprick of light, you can actually learn a ton.
+
+You can break that light into its colors with a prism… to study the atmosphere’s spectrum…
+
+That is, how bright the planet is in different colors of light.
+
+Each molecule in a planet’s atmosphere vibrates at a different frequency… imagine a xylophone.
+
+Imagine carbon dioxide sounds like this…
+
+Nitrogen sounds like this…
+
+And Oxygen sounds like this…
+
+Put them together, and the frequency of Venus would sound like this…
+
+On the other hand, Earth would sound like this…
+
+From those frequencies of light, we can begin to understand what an exoplanet is like.
+
+That’s where Roman’s second camera comes in.
+
+It’s a technology demonstration, an experiment. That instrument will allow Roman to directly image exoplanets.
+
+Although… easier said than done.
+
+The problem is that when you look at a planet next to a star, the star is extremely bright, so at visible wavelengths, for instance, the star is a billion to 10 billion times brighter than the planet.
+
+That is billion with a B! Compared to the light from a planet, that planet’s star is blinding.
+
+To spot a planet directly, you need a device that can block the light of the star enough that you can see the much dimmer planet.
+
+And the device that does that is called a coronagraph.
+
+You can imagine if you hear an airplane in the sky and you’re trying to see where it is, you think it’s near the Sun, but the Sun is just blinding you. The intuitive thing for you to do is to hold up your hand and block the Sun’s light, so you can see something much fainter nearby. Fundamentally, that’s what a coronagraph does. It’s a more sophisticated version, of course, but we have a little opaque spot inside of our inside of our instrument, as well as some other optics that will block the star’s light before it ever reaches the camera, but will allow the planet light to pass through.
+
+This is a technology with a long history.
+
+A hundred years ago, scientists used the first coronagraphs to block out the super bright disk of our own Sun to simulate an eclipse… and study the Sun’s corona… its wispy atmosphere.
+
+That’s why it’s called a coronagraph.
+
+Since then, scientists have thought about using the same technology to look for worlds around other stars.
+
+Way back in 1959, Nancy Grace Roman – the woman whose name is now on the Roman Space Telescope – published a short paper in The Astronomical Journal titled “Planets of other suns.”
+
+She suggested a space telescope could theoretically spot Jupiter from Alpha Centauri, the nearest star to our Sun.
+
+So she had this vision that we could build a much more complex and expansive view of our universe if we also launched space telescopes. She wrote a letter saying, “Well, you know, I think it might be possible to image exoplanets around the very nearest by stars if we could get above the blurring effects of the atmosphere.”
+
+Nancy Grace Roman wrote, “It does not seem to be a serious problem to get rid of the light of the primary in the absence of an atmosphere.”
+
+Meaning, to block out the light of the star when observing it from space.
+
+Vanessa says she kind of laughs at that line… it has actually turned out to be a very challenging problem.
+
+NASA’s Hubble space telescope has a coronagraph. So does the James Webb Space Telescope.
+
+But those are pretty simple… what astronomers call passive coronagraphs. They aren’t good enough to directly image most exoplanets.
+
+Hubble and James Webb… they’re only able to detect very big, bright, hot, young planets… planets so hot they have clouds made of vaporized rock.
+
+These planets are bright enough they give off their own light… they literally glow!
+
+But scientists want to eventually spot mature, rocky planets… like Earth.
+
+And that’s much harder, because the only light from them is the light they reflect from their star.

@@ -151,6 +151,11 @@ details.ted .chip{background:var(--surface);color:var(--soft-ink);max-width:100%
 .tedi{text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 11px;display:grid;gap:3px;min-width:0;color:var(--fg)}
 .tedi b{font-family:var(--serif);font-size:14px;line-height:1.35;min-width:0}
 .tedi.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.libbox{border:1px solid var(--accent);border-radius:10px;padding:12px;background:var(--surface);display:grid;gap:10px;min-width:0}
+.libbox .tedlist{max-height:none}
+.libbox .tedi{background:var(--bg)}
+.prog{display:block;height:4px;background:var(--rule);border-radius:2px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:10px 14px;border-radius:10px;font-size:13.5px;box-shadow:var(--shadow);z-index:20;max-width:min(92vw,520px);text-align:center;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
 .word-pop{position:fixed;inset:auto 0 0 0;z-index:15;background:var(--surface);border-top:1px solid var(--line);border-radius:14px 14px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.18);padding:14px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:grid;gap:10px}
@@ -541,9 +546,14 @@ function stepSelect(m){
       <div style="margin-top:14px" id="dangerZone"><button class="btn sm danger ghost" id="delAsk">放弃这篇</button><div class="inline-confirm" id="delConfirm" hidden><span>连同听写、笔记一起删掉，不可恢复。</span><button class="btn sm danger" id="delGo">确定删除</button><button class="btn sm" id="delNo">算了</button></div></div></div>`;
   }
   return `<div class="card"><div class="eyebrow">01 选材</div><h2>找一篇你真想听懂的</h2>
-    <p class="small muted" style="margin:6px 0 14px">她的标准：感兴趣、20 分钟左右、之前没接触过。新闻、访谈、演讲、纪录片、书都行；文学、诗歌、影视对白不行。原文现在就要粘进来，保存后会锁起来，听写核对前你看不到它。</p>
+    <p class="small muted" style="margin:6px 0 14px">她的标准：感兴趣、20 分钟左右、之前没接触过。新闻、访谈、演讲、纪录片、书都行；文学、诗歌、影视对白不行。最省事的是从下面的素材库里挑一篇，点一下就能开始。</p>
     <div class="stack" style="margin-top:0">
-      <details class="ted" ${m.source&&tedSlug(m.source)?'open':''}><summary>从 TED 来一篇（最省事：每条都有逐字稿）</summary>
+      <div class="libbox"><div class="row" style="justify-content:space-between"><b>素材库</b><span class="small muted">点一下，音频和原文一起下到手机</span></div>
+        <div class="row" id="libTopics" style="gap:6px"></div>
+        <div class="tedlist" id="libList"><div class="hint">正在读取素材库…</div></div>
+        <div class="hint">都是美国政府出品的公版节目（VOA 专题、NASA 科普播客），原文是官方逐字稿，我逐篇用语音识别核过首尾。下载后自动锁定原文，直接进盲听。</div></div>
+      <div class="hint" style="text-align:center">— 或者用自己的素材 —</div>
+      <details class="ted" ${m.source&&tedSlug(m.source)?'open':''}><summary>从 TED 自己取一篇（要手动复制逐字稿、下载音频）</summary>
         <div class="stack" style="margin-top:10px;gap:10px">
           <div class="small" style="color:var(--soft-ink)">精选 ${TED_LIB.length} 篇 17–21 分钟的演讲，按话题挑一篇；也可以在最下面粘任何 TED 链接。</div>
           <div class="row" id="tedTopics" style="gap:6px">${['全部'].concat(TED_TOPICS).map((t,i)=>`<button type="button" class="btn sm ${i===0?'on':''}" data-topic="${t}">${t}</button>`).join('')}</div>
@@ -598,6 +608,30 @@ function bindSelect(m){
     list.querySelectorAll('[data-slug]').forEach(b=>b.onclick=()=>{ const x=TED_LIB.find(y=>y.s===b.dataset.slug); tedUrl.value=`https://www.ted.com/talks/${x.s}`; renderTed(); $('#fTitle').value='TED · '+x.n; $('#fType').value='speech'; $('#fSource').value=tedUrl.value; save(); renderList(); toast('已选《'+x.n+'》，下一步去拿逐字稿'); $('#tedOut').scrollIntoView({behavior:'smooth',block:'center'}); }); };
   $('#tedTopics').querySelectorAll('[data-topic]').forEach(b=>b.onclick=()=>{ topic=b.dataset.topic; $('#tedTopics').querySelectorAll('[data-topic]').forEach(c=>c.classList.toggle('on',c===b)); renderList(); });
   renderList();
+  // 素材库：一键下载音频 + 原文，下完自动锁定原文、进盲听
+  const libList=$('#libList'), libTopics=$('#libTopics'); let lib=null, libTopic='全部', busy=false;
+  const usedLib=new Set(Object.values(S.materials).filter(x=>x.libId&&x.id!==m.id).map(x=>x.libId));
+  const renderLib=()=>{ if(!lib) return;
+    const topics=['全部'].concat([...new Set(lib.map(x=>x.topic))]);
+    libTopics.innerHTML=topics.map(t=>`<button type="button" class="btn sm ${t===libTopic?'on':''}" data-lt="${esc(t)}">${esc(t)}</button>`).join('');
+    libTopics.querySelectorAll('[data-lt]').forEach(b=>b.onclick=()=>{ if(busy) return; libTopic=b.dataset.lt; renderLib(); });
+    libList.innerHTML=lib.filter(x=>libTopic==='全部'||x.topic===libTopic).map(x=>`<div class="tedi"><span class="row" style="justify-content:space-between;gap:6px"><b>${esc(x.title)}</b><span class="num small muted" style="flex:none">${Math.round(x.durationSec/60)} 分钟</span></span><span class="small muted">${esc(x.topic)} · ${esc(x.speed)} · ${esc(x.source)}</span><span class="small">${esc(x.desc)}</span><span class="row" style="gap:8px"><button type="button" class="btn sm primary" data-get="${esc(x.id)}">${usedLib.has(x.id)?'啃过了，再来一遍':'下载并开始'}</button><span class="small muted num" data-st="${esc(x.id)}">${x.mb} MB</span></span><span class="prog" hidden data-pg="${esc(x.id)}"><i></i></span></div>`).join('');
+    libList.querySelectorAll('[data-get]').forEach(b=>b.onclick=()=>getLib(b.dataset.get)); };
+  const getLib=async id=>{ if(busy) return toast('有一篇正在下载，等它下完'); const x=lib.find(y=>y.id===id); if(!x) return; busy=true;
+    const st=libList.querySelector(`[data-st="${id}"]`), pg=libList.querySelector(`[data-pg="${id}"]`), bar=pg.querySelector('i'); pg.hidden=false; st.textContent='下载中…';
+    try{
+      const tr=await fetch('./lib/'+x.id+'.txt'); if(!tr.ok) throw new Error('txt '+tr.status); const text=await tr.text();
+      const ar=await fetch('./lib/'+x.id+'.mp3'); if(!ar.ok) throw new Error('mp3 '+ar.status);
+      const total=x.bytes||+ar.headers.get('content-length')||0; let blob;
+      if(ar.body&&ar.body.getReader){ const rd=ar.body.getReader(); const chunks=[]; let got=0; for(;;){ const {done,value}=await rd.read(); if(done) break; chunks.push(value); got+=value.length; if(total){ bar.style.width=Math.min(100,got/total*100).toFixed(0)+'%'; st.textContent='下载中 '+(got/1048576).toFixed(1)+' / '+(total/1048576).toFixed(1)+' MB'; } } blob=new Blob(chunks,{type:'audio/mpeg'}); }
+      else blob=new Blob([await ar.arrayBuffer()],{type:'audio/mpeg'});
+      if(blob.size<100000||wordCount(text)<120) throw new Error('incomplete');
+      await AudioStore.put(m.id,blob);
+      m.title=x.title; m.type=x.type; m.source=x.source+' · '+x.url; m.transcript=text; m.audioName=x.id+'.mp3'; m.durationSec=x.durationSec; m.libId=x.id;
+      m.step=2; m.status='active'; m.startedAt=Date.now(); S.sub[m.id]={step:2,phase:'blind'}; P.url=null; P.matId=null; Store.saveMaterial(m,true);
+      busy=false; toast('下载好了，原文已锁定。先盲听。'); render(); window.scrollTo(0,0);
+    }catch(e){ busy=false; pg.hidden=true; bar.style.width='0'; st.textContent='没下成，检查网络后再点一次'; console.warn(e); } };
+  fetch('./lib/index.json',{cache:'no-cache'}).then(r=>r.ok?r.json():Promise.reject(r.status)).then(j=>{ lib=(j&&j.items)||[]; if(!lib.length) throw 0; renderLib(); }).catch(()=>{ libList.innerHTML='<div class="hint">素材库要联网才能读取，而且只在装到桌面的那个版本里有。现在读不到，可以先用下面的办法自己放音频和原文。</div>'; });
   $('#fAudio').onchange=async e=>{ const f=e.target.files[0]; if(!f) return; save();
     toast('正在读音频时长…'); const url=URL.createObjectURL(f); const a=new Audio(); a.preload='metadata';
     const dur=await new Promise(res=>{ a.onloadedmetadata=()=>res(a.duration); a.onerror=()=>res(0); a.src=url; setTimeout(()=>res(a.duration||0),8000); });

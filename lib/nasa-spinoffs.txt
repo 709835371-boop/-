@@ -1,0 +1,179 @@
+You’re listening to NASA’s Curious Universe. I’m Jacob Pinter.
+
+NASA has a big mission: to explore the unknown in air and space. To inspire the world through discovery. And to innovate for the benefit of all humanity.
+
+When NASA sets out to do things that seem hard … or even impossible … it ends up inventing a lot of stuff. Not just cool stuff … but useful stuff.
+
+And at NASA … those new technologies don’t stay locked up in a warehouse.
+
+In fact, from the very beginning … starting with the U.S. law that created NASA almost 70 years ago … NASA has had a responsibility to share everything it creates with the public.
+
+You might have NASA inventions in your house right now… if you sleep on a memory foam mattress… or build your furniture with cordless power tools… if you navigate with GPS or wear scratch-resistant glasses.
+
+In this episode … we’re learning about the pipeline that turns NASA research into stuff we all use.
+
+We’ll hear how NASA engineers rise to the occasion during times of crisis … and the surprising ways that little bits of the space program show up in our lives, every day.
+
+NASA’s Technology Transfer Program Office looks at every new technology the agency develops, and thinks of ways to commercialize it.
+
+Each year, they produce a report called “Spinoff.” The very first Spinoff report came out in 1976… America’s Bicentennial year.
+
+That means the magazine’s 50th anniversary this year… is also America’s 250th.
+
+Our guide through the history of NASA Spinoffs is Dan Lockney.
+
+Dan runs the Technology Transfer Program at NASA. And I started our conversation asking him what exactly defines a Spinoff:
+
+So, Spinoff is a commercialized product or service that resulted from NASA funding or know-how. The term comes from the 1970s when Mork and Mindy spun off from Happy Days.
+
+Yeah.
+
+And it was that golden age of the sitcom, and there are all these spin-offs coming out. So in the 1950s, late 1950s the U.S. Congress and the president created this thing called NASA, and in the foundational legislation that created the space agency, 1958, there was this language that was very bold and forward looking and kind of beautiful, and I quite honestly confuse it with the beginning of Star Trek.
+
+Like the original Star Trek, like, “To boldly go where no man has ever gone before,” like that, that that language, but it reads like that, but that’s that’s how it’s gonna sound if you’re creating a space program, it’s gonna be kind of grand.
+
+Yeah.
+
+But to paraphrase, there’s, there’s language that essentially says, “Make sure that all the stuff developed for space doesn’tjust blast off into space and stay there. Make sure it comes back down to Earth in the form of practical and terrestrial benefits,” like, “Share the cool stuff with us here on Earth.”
+
+If that’s not “Star Trek” enough for you… here’s Captain James T. Kirk himself… William Shatner… in an old Spinoff promotional video:
+
+Archival Spinoff promo video: NASA has developed medical innovations that can be applied to life right here on Earth. These technologies give first responders fast and reliable medical tools that help save lives. They also enhance preventive care. Spinoffs like these are just a few examples of how NASA technology turns science fiction into science fact. There’s more space in your life than you think.
+
+So, 1958, NASA created its first Technology Transfer office.
+
+Hmm.
+
+And we would report to Congress this kind of stale report, as the government can do, this, this, “We have conducted the following space research and developed the following results, as from our, from our research.” And we’re patenting things, like we patented a mechanism that would replicate a mother pig, so that baby pigs would nurse from it, and that was just heat pump technology that we had been working on. And then industry reached out and said, “We’ve got this problem, that sometimes there’s baby piglets, and then they won’t latch” to go, “Oh, we’ll make y’all a fake pig.”
+
+So things like that, we were heavily engaged in. We had also around that time invented this anti-vibration foam, this open cell visco-elastic foam, not for space, but rather for long duration airplane travel, because NASA does airplanes in addition to spaceships, and that later became memory foam, which is one of our biggest NASA Spinoffs.
+
+Archival Spinoff memory foam video: The result of their research was a special kind of plastic called open cell polyurethane silicone. It’s temperature sensitive and pressure sensitive, meaning it reacts to body temperature, getting softer when warm, and firmer when cold.
+
+I do, I want to get into some more, like, specific Spinoffs as we go, but I am curious, how you got into this line of work and got this job?
+
+Oh.
+
+I think just hearing this off the bat, you imagine like, “Dan Lockney must be like, really an inventor, an engineering tech guy,” and that’s like where you come from.
+
+We could leave it at that.
+
+No, no, no, no, not at all. I did odd jobs for a while. I was a school teacher for a minute, and no, my background is in writing, and I was actually thinking about culinary school, and I had enrolled in culinary school, never went, but I thought, “I’m gonna go to culinary school and write cookbooks,” and I had this flash moment of, “I don’t want to work in a kitchen, I’ll be like wet and working, like smell like garlic all the time, and burned and I’ll cut my fingers, and I’ll end up like working like Christmas night or something like that, and I don’t want this.” And so I applied for this job, I didn’t know what it was exactly, and I showed up, and there’s that blue NASA logo on the door. I was like, what, like NASA? This is 20-plus years ago, and I just fell in love with it. And what I loved about it, and the same reason I almost ended up going to culinary school and writing cookbooks, is I just wanted stories, and the Technology Transfer stories and the Spinoff stories are kind of like Law & Order.
+
+The Spinoff structure is, “NASA gets asked to do something that no one’s ever done before,” like bum bum, that’s my Law & Order sound. And then, as a result of it, the smart people at NASA start poking around, figuring stuff out, and they work and work, work until they reach a limit in the state of the art, and then invent something new.
+
+Yeah.
+
+And, bum bum, so there’s a new thing. And then Tech Transfer comes in, and that’s my office, and we take a look at it, and we try to figure out who else can use this, and how.
+
+Yeah.
+
+And that’s the weird fun part, and then the next and final part of the story is some company picks it up, turns it into a product or a service, and then we can point to it and say, “Yeah, it started off, for example, as the Space Shuttle main engine, but that understanding of fluid dynamics, as well as some of the valve technology, made its way into the DeBakey ventricular assist device, which is the first bridge to heart transplant implantable ever used in children.” Wait, what? And then bum bum.
+
+And, and “Dick Wolf” flashes across the screen, and you’re like, and then another one rolls, you know, because, like, you turn on, there’s, there’s channels that only play Law & Order, that’s like me a little bit, but with, with NASA Spinoffs. And they go on and on.
+
+But, but I think you know kind of what you’re saying, there’s a lot of them, they’re, they’re kind of like everywhere, all around us, you know, even if only you had eyes to see, you would see it everywhere, you know?
+
+Oh, I get, yeah, people who spend time with me, after a while, I go, “Hey, do you see that thing? And they go, “Did NASA invent it?”
+
+No, no, no, no. OK, yes.
+
+Because it’s everywhere. It really is everywhere. So I started to tell you that in the ‘50s and ‘60s we were writing these reports to Congress, and then Congress found that it was useful to share with the public. That ended up becoming a glossy four color report that we would provide every year, that’s called Spinoff, and this this year is the 50th anniversary of Spinoff, which is why I’m here talking to you, and we featured thousands of these different stories, everything from a vegan cream cheese recently that was based on microbial growth nutrition research from a couple years ago at our Ames Research Center to a software that’s designed everything from guitars to Cadillacs to roller coasters, and the span of technologies is phenomenal, and their applications is even more impressive.
+
+Yeah.
+
+So we’ve been continuously cranking this book out once a year for the past 50 years.
+
+So… I thought it would be helpful to take a look back at the first Spinoff report.
+
+For one … it’s hefty. It’s about a hundred pages. Dan says it makes a nice “thump” when you drop it on your desk.
+
+The cover has a striking image of Earth, seen from space. Blue oceans, brown continents, white clouds swirling.
+
+This was just a few years after the Apollo program … when Americans had rallied around the first Moon landings.
+
+In a foreword at the beginning of the report, there’s a reflection on NASA’s place in American history.
+
+Looking back from the bicentennial year of 1976 … a NASA official named Edward Gray called the U.S. space program an example of American preeminence. And … he pointed out that technology transfers had “more than paid for” the cost of space exploration.
+
+“Looking ahead”, Gray wrote, “it is apparent that we cannot rest if we are to maintain our leadership. Other countries are rising rapidly to challenge our lead. Meeting this challenge requires all available resources—and technology is one of our primary national resources.”
+
+So I asked Dan for an example from the ‘70s of NASA technology that made its way into the world.
+
+In the 1970s there was an energy crisis. The federal government—including NASA—was under a lot of pressure to figure something out.
+
+In stepped a NASA engineer named Ed Saltzman. He was an “aerodynamicist”.
+
+Which is a cool job title, and he was working out at our Dryden Flight Research Center, which is now called Armstrong, and that’s up in the high desert, about 90 minutes north of Los Angeles. So this is in the middle of nowhere.
+
+Archival Space Shuttle video: January 31st, 1977. The Mojave Desert. Space Shuttle Orbiter 101 is being transported from its assembly facility in Palmdale, California, 35 miles overland to NASA’s Dryden Flight Research Center at Edwards Air Force Base.
+
+And Ed was, 1970s and he’s, he’s a quite the character, and a hero, he would, he would ride his bicycle to work there, so it’s the farthest place you could ever imagine, enough in the mountains and in the desert, he would get on his little 1970s bike and just pedal his way to work.
+
+And as he was on the highway there, because this is a highway too he’s riding his bike on. These trucks would pass him and they would drive by him and kick up these, these wind vortices, this, this little mini tornado behind the truck, and Ed would shake his hand, his fist at them, and be like, “Grrrr!”
+
+But he’d keep peddling along. And part of the reason there was so much turbulence off of the back of these trucks is if you picture back to the 1970s-style semi trucks, they had a square front, was like a, like a shoe box going down the road, or like, as aerodynamic as a sheet of plywood facing the flat way. It would just kick up all this wind, and Ed would, would think, “There’s got to be a better way to do that.” Ed gets to work, I assume he has a shower, gets cleaned up, goes in, maybe not. I don’t, I don’t, I don’t know.
+
+Well he’s out in the desert with nobody else so I mean…
+
+So, does it matter? He drinks a glass of water, hopefully, coffee. So Ed goes out to the runway, where he’s working on the design of what would become the Space Shuttle
+
+Archival Space Shuttle video: NASA’s reusable orbiter, part of a new, less expensive Space Transportation System. A spaceship that will put our country in the Earth orbit freight business. This is Orbiter 101 as it rolled out of the hangar at Palmdale, California. It has been named the Enterprise.
+
+And if you picture the Space Shuttle, it had this kind of nose on it, like Snoopy, it had this like beak, this soft leading edge. SoEd’s looking at that, he’s thinking about his ride to work every morning on his bicycle, and he comes up with this idea, he runs it up the chain to his bosses, and they go, “It’s worth trying, and the president’s asked.” And so they retrofit a box truck, and they call Department of Transportation in, and they retrofit this box truck with some steel panels on the front, and create this smooth, rounded nose on the front of the truck, and then run experiments, running up and down, they go, “Well, saves a lot of gas, saves a lot of gas.” So then Ed and some folks from the Department of Transportation, the Volpe Laboratory, they roll out to all of the manufacturers of these big semi trucks in the U.S., Kenilworth, Peterbilt, and they say, “We got an idea, and they, we’re NASA,” and they go, “Oh, come on in, y’all went to the Moon,” like “I’m gonna hear what you have to say,” because there’s NASA’s got this reputation, and they listen to them, and they go, “It’s not really for us. Thanks for your Moon stuff, though.”
+
+Hmm.
+
+Alright, that following year every truck that rolled off the production line had that same design and each of these companies go, “Oh, we came up with our own. We patented it, this is our own internal research that came up,” that, we didn’t care. We wanted them to get out to the public. It’s not about the patenting and the licensing. We wanted the trucks to be more fuel efficient.
+
+Yeah.
+
+So now you see a semi truck going on the road. And it’s the semi truck that you will see today, it looks like the Space Shuttle, because of Ed Saltzman riding his bike to work in the 1970s.
+
+So we so far have been talking about technology transfers that happened 40, 50, maybe more years ago. Technology has kept happening and being transferred, obviously, so like, if I’m sitting in my house, or if I’m at my desk at work, or something, where are some, some ways that I might look around, and where might there be NASA Technology Transfer technology, sort of there with me, that’s always there, that I just never realized?
+
+Oh, we’re everywhere, we’re everywhere.
+
+Yeah?
+
+First cordless headphones, wireless headphones. One of my favorites comes out of JPL, and we developed there a lightweight, high-resolution camera that doesn’t draw a lot of power, and it was for satellite applications, and the reason you want those attributes is fairly obvious. You want it lightweight because you’re going into space with it, and you don’t want to use a lot of power because you can’t run an extension cord. You want a high resolution because you want good pictures coming out of it. So we developed this camera on a chip, and we didn’t know what to do with it, which was fun and delightful. And we were picturing like spies could use it, or like maybe it’s a novelty item.
+
+Now, there was a trend in the ’80s, Dan says … where hiding a camera in a pen was kind of a hip novelty item.
+
+But this “camera on a chip” was destined for bigger things.
+
+People who made cell phones found out about it.
+
+Of course cell phones back then could do a lot less than the phones we all use today.
+
+Some engineers thought … what if we used NASA technology to put a camera in a cell phone?
+
+Dan wasn’t at NASA at the time.
+
+But he says the response was something like …
+
+That’s weird. Why would you ever want a camera on your cell phone?
+
+And they answered, in Japan, there’s this kawaii culture where there’s love of things that are cute and adorable, and such, and it’s kind of exemplified in the culture of the teenage girls there, they say, “Here’s what they could do, they could take pictures of like a cupcake that they liked, and then send it to their friends, and they’d have these virtual trading cards,” OK, have fun, y’all. And then to fast forward what 30, 40 years, and it turns out that deep down we’re all Japanese teenage girls on the inside…
+
+Taking pictures of cupcakes.
+
+Taking pictures of cupcakes and sharing with our friends.
+
+Absolutely. So, the same type of sensor in that first Nokia phone has just sort of like stayed around, maybe evolved some, but like is the same kind of underlying sensor in smartphones today?
+
+Camera on a chip. Yeah, we were the first, and we actually received royalties from, let’s just say, all the companies that were making cell phone cameras. Blackberry was one, and Nokia, and everyone was using the same one.
+
+Yeah, so Spinoffs continue to happen, technology continues to be transferred, right? Are you involved also in the new technologies that are…
+
+That’s what this job turned into, and one of the cool things that I’ve, that I’ve witnessed over time is its evolution, and it used to be we had this almost like a chip on our shoulder where we’d say, you know, “It’s hard to transfer this technology to the public, because it’s not like anyone’s building their own spaceships, like we had all this space technology, and we got to find weird applications for it,” like the Zit Zapper, which is a story I’ll tell you some other day, and all kinds of bizarre things like that. We had to look for these secondary applications that were unexpected. Now it turns out people are making spaceships.
+
+Archival Crew-12 launch video: SpaceX is go, crew is go. Let’s watch as Falcon 9 takes Crew-12 out into space. 4, 3, 2, 1, ignition and liftoff. Go Falcon, go Dragon, and godspeed Crew-12.
+
+and so a lot of our work is to these emerging space companies like heat shields and sensors and different techniques and devices that these companies benefit from that NASA has already kind of like led the way on.
+
+Yeah.
+
+But still my favorite part is the the large portion of it that’s still the weird unexpected stuff like the cream cheese I mentioned earlier.
+
+Another one of Dan’s favorites starts with the space shuttle.
